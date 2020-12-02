@@ -1,12 +1,13 @@
 from django.db import models
-from novav1.models import Clinc , DoctorIn , pricing
+from novav1.models import Clinc , DoctorIn , pricing ,Patient ,Branch
 
 # Create your models here.
 
 
 class Events(models.Model):
     event_id        = models.AutoField(primary_key=True)
-    event_name      = models.CharField(max_length=255,null=True,blank=True)
+    #event_name      = models.CharField(max_length=255,null=True,blank=True)
+    event_name      = models.ForeignKey("novav1.Patient",  on_delete=models.CASCADE,null=True,blank=True)
     start_date      = models.DateTimeField(null=True,blank=True)
     end_date        = models.DateTimeField(null=True,blank=True)
     event_type      = models.CharField(max_length=10,null=True,blank=True)
@@ -23,6 +24,7 @@ class Events(models.Model):
     session_doctor  = models.ForeignKey("novav1.DoctorIn",  on_delete=models.CASCADE,blank=True, null=True)
     session_area    = models.ForeignKey("novav1.pricing",  on_delete=models.CASCADE,blank=True, null=True)
     session_used_balls= models.IntegerField(blank=True, null=True)
+    session_branch= models.ForeignKey("novav1.Branch", on_delete=models.CASCADE,blank=True, null=True)
     
 
 

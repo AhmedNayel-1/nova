@@ -1,6 +1,10 @@
 from django.shortcuts import render ,redirect
 
+
+from django.views import generic
 from .models import Events , CrudUser
+from novav1.models import Patient
+from .forms  import EventForm ,ArriveForm , SessionDetail
 from django.views.generic import TemplateView, View, DeleteView
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
@@ -181,3 +185,51 @@ def sessionDetail(request,id):
     else:
         form = forms.SessionDetail(instance=events)
     return render(request, 'core/templates/sessionDetail.html',{'form':form})       
+
+
+
+
+# class EventCreateView(generic.CreateView):
+#     template_name="event_manage/templates/event_form.html"
+#     model = Events
+#     form_class = EventForm
+#     success_url = "/"
+
+
+class ArriveCreateView(generic.CreateView):
+    template_name="event_manage/templates/arrive_form.html"
+    model = Events
+    form_class = ArriveForm
+    success_url = "/"    
+    
+class SessionCreateView(generic.CreateView):
+    template_name="event_manage/templates/session_form.html"
+    model = Events
+    form_class = SessionDetail
+    success_url = "/"
+
+
+def EventCreateView(request):
+    person  = Patient.objects.all()
+    event   = Events.objects.all()
+
+    if request.method=='POST':
+        event_name  = Patient.objects.get(pk=request.POST.get('Patient'))
+        start_date  = request.POST['start_date']
+        end_date    = request.POST['end_date']
+        user = request.user
+
+        obj = Events.objects.create(
+            event_name = event_name,
+            start_date = start_date,
+           # end_date = end_date,
+            
+
+        )
+
+        print(request)
+        return redirect ('/event')
+    return render(request, 'event_manage/templates/event_form.html',{'person':person})
+            
+    
+

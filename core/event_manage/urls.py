@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import  path
 from django.conf.urls import url
 from . import views
-
+app_name = 'event_manage'
 urlpatterns = [                          
    path('event/', views.event, name="manage-event"),
    url('^calendareve', views.calendar, name='calendar'),
@@ -21,4 +21,8 @@ urlpatterns = [
     path('newevent', views.newevent, name='newevent'),
 
     path('eventreservation/<int:id>', views.update, name='eventreservation'),
+
+    path("eventcreate", views.EventCreateView, name="Event-create"), 
+    path("arrive", views.ArriveCreateView.as_view(), name="Arrive-create"), 
+    path("session", views.SessionCreateView.as_view(), name="Session-create"), 
 ]

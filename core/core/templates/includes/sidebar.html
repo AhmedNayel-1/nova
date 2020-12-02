@@ -132,19 +132,19 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'Reservation-create' %}" class="nav-link">
+                <a href="{% url 'event_manage:Event-create' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>New Reservation</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{% url 'Reservation-data' %}" class="nav-link">
+                <a href="{% url 'event_manage:Arrive-create' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Reservation Data </p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/charts-inline.html" class="nav-link">
+                <a href="{% url 'event_manage:Session-create' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Reservation Data</p>
                 </a>
@@ -181,7 +181,7 @@
               </li>
             </ul>
           </li>
-          <!-- payments -->
+          <!-- Customers Transactions -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
@@ -201,6 +201,36 @@
                 <a href="{% url 'balls_transaction' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Balls Transactions  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'refund' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Refunds</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- rseserv -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>
+                Customers balans
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>cash Balance</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Balls balance  </p>
                 </a>
               </li>
               <li class="nav-item">

@@ -17,8 +17,11 @@ from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 import random
 import string
+import math
+from itertools import zip_longest 
 from calls.models import calls
 from calls.models import calls
+from event_manage.models import Events
 def create_ref_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))
 
@@ -894,4 +897,82 @@ def Refunds(request):
 
         
         return redirect ('/')
-    return render(request, 'core/templates/refund.html',{'person':person ,'orders':orders})    
+    return render(request, 'core/templates/refund.html',{'person':person ,'orders':orders}) 
+
+
+
+
+def cashbalance(request ,pid):
+    cash=models.Order.objects.filter( Patient_id=pid)   #order_type__in=[1, 4]
+
+    total_price=0
+    for value in cash:
+        total_price += value.TotalPrice
+
+    total_cash=0
+    for value in cash:
+        total_cash += value.Cash 
+    total_Remmaining=0
+    for value in cash:
+        total_Remmaining += value.Remmaining
+    Total_required = total_price - total_cash
+
+
+    context={
+           'cash':cash,
+           'total_cash':total_cash,
+           'total_Remmaining':total_Remmaining,
+           'Total_required':Total_required
+    }
+    return render(request, 'core/templates/cashbalance.html', context)
+
+
+
+def ballsbalance(request ,pid):
+    order_all_ballses= models.Order.objects.filter( order_type__in=[1, 2,3],Patient_id=pid) 
+
+    #Add balls efects models
+    order_transfer_ballses = models.Order.objects.filter( order_type__in=[1, 2],Patient_id=pid) 
+
+    #Cuts ballses  models
+    event= Events.objects.filter(event_name=models.Patient.objects.get(pk=pid))
+    order_transfer_ballses = models.Order.objects.filter( order_type=3,Patient_id=pid)
+
+    #Add ballsese sum
+    total_plus_balls_in_order=0
+    for value in order_all_ballses:
+        total_plus_balls_in_order += value.balls
+
+    #Cut ballses sum    
+
+    total_ballse_in_event=0
+    for value in event:
+        total_ballse_in_event += value.session_used_balls
+
+    order_transfer_ballses=0
+    for value in range(order_transfer_ballses):
+        order_transfer_ballses += value.balls
+
+    #total cut ballses 
+    total_cut_ballses =total_ballse_in_event + order_transfer_ballses
+
+    #total balls reminning
+
+    total_ballses_remining = total_plus_balls_in_order - total_cut_ballses
+
+    
+
+    objects_list = list(zip_longest(order_all_ballses, event))
+
+    
+    context={
+           'objects_list':objects_list,
+           'total_plus_balls_in_order':total_plus_balls_in_order,
+           'total_cut_ballses':total_cut_ballses,
+           'total_ballses_remining':total_ballses_remining
+           
+           
+    }
+    return render(request, 'core/templates/ballsbalance.html', context)
+
+

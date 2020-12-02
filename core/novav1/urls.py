@@ -99,4 +99,8 @@ urlpatterns = [
     path('balls_transaction', views.balls_transaction, name='balls_transaction'),
     path('payments', views.just_payment, name='just_payment'),
     path('refund', views.just_payment, name='refund'),
+
+
+    path('cashbalance/<int:pid>/', views.cashbalance, name='cashbalance'),
+    path('ballsbalance/<int:pid>/', views.ballsbalance, name='ballsbalance'),
 ]

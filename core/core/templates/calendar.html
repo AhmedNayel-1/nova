@@ -129,7 +129,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>One fine body&hellip;</p>
+          <p><input type="text" name="event_name" id="event_name" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
+            <input type="text" id="apptStartTime" name="start_date"/>
+            <input type="text" id="apptEndTime" name="end_date"/>&hellip;</p>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -139,6 +141,8 @@
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+
+   
   </div>
 
 {% endblock content %}
@@ -233,18 +237,33 @@
         },
         'themeSystem': 'bootstrap',
         //Random default events
+        slotDuration: '00:15:00',
+        slotLabelInterval: 15,
         events    : [
         {% for i in events %}
                 {
                     title: "{{ i.event_name}}",
                     start: '{{ i.start_date.isoformat }}',
                     end: '{{ i.end_date.isoformat }}',
-                    
-                    backgroundColor: '{{ i.backgroundColor }}', //red
-                     url            : 'event/eventreservation/ {{ i.event_id}}/ ',
+                    {% if i.arrive == True %}
+                       backgroundColor: '#00a65a', //Success (green)
+                       {% elif i.arrive == True and  i.start_session %}
+                       backgroundColor: '#f39c12', //yellow
+                       {%else%}
+                       backgroundColor: '#f39c12', //yellow
+                    {%endif%} 
                 },
                 {% endfor %}
-        ],                                        
+        ],   
+        selectable: true,
+        select: function (start, end) {
+          $('#modal-lg').modal('show');
+          var start = $.fullCalendar.formatDate(end,'h:mm tt');
+          var end = $.fullCalendar.formatDate(start,'ddd, MMM d, h:mm tt');
+          $('#modal-lg #apptStartTime').val(start);
+          $('#modal-lg #apptEndTime').val(end); 
+          
+        },                                      
         eventClick: function(event) {
             // Display the modal and set the values to the event values.
             $('#modal-lg').modal('show');
