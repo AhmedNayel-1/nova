@@ -138,11 +138,11 @@ nk Page {% endblock %}
                                   <td>{{ result.PatientMobile1 }}</td>
                                   <td>
                                    <div>
-                                        <a class="btn btn-warning" href="{% url 'Patient-detail' result.id %}"">Detail</a> 
-                                        <a class="btn btn-warning" href="{% url 'items-list' result.id %}"">pos</a>
-                                        <a class="btn btn-warning" href="{% url 'items-list2' result.id %}"">sale</a> 
-                                        <a class="btn btn-warning" href="{% url 'cashbalance' result.id %}"">cash </a> 
-                                        <a class="btn btn-warning" href="{% url 'ballsbalance' result.id %}"">balls</a> 
+                                        <a class="btn btn-warning" href="{% url 'Patient-detail' result.id %}" target="_blank">Detail</a> 
+                                        <a class="btn btn-warning" href="{% url 'items-list' result.id %}" target="_blank">pos</a>
+                                        <a class="btn btn-warning" href="{% url 'items-list2' result.id %}" target="_blank">sale</a> 
+                                        <a class="btn btn-warning" href="{% url 'cashbalance' result.id %}" target="_blank">cash </a> 
+                                        <a class="btn btn-warning" href="{% url 'ballsbalance' result.id %}" target="_blank">balls</a> 
                                         </div>
                                   </td>      
                   {% endfor %}

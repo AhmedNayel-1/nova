@@ -24,5 +24,15 @@ urlpatterns = [
 
     path("eventcreate", views.EventCreateView, name="Event-create"), 
     path("arrive", views.ArriveCreateView.as_view(), name="Arrive-create"), 
-    path("session", views.SessionCreateView.as_view(), name="Session-create"), 
+    path("session/<int:id>", views.sessionDetail, name="Session-create"), 
+    
+    
+    path("reception", views.reception_all_reserv, name="reception_all_reserv"), 
+    path("reception/arrive", views.reception_reserv_arrive, name="reception_reserv_arrive"), 
+    path("reception/srart", views.reception_reserv_srart, name="reception_reserv_srart"), 
+    path("balls_entry/<int:event_id>/", views.balls_entry, name="balls_entry"),
+
+    path("onofarrive/<int:id>/", views.onofarrive, name="onofarrive"), 
+    path("onofstart/<int:id>/", views.onofarrive, name="onofstart"), 
+
 ]

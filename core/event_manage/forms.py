@@ -40,6 +40,16 @@ class ArriveForm(forms.ModelForm):
 class SessionDetail(forms.ModelForm):  
     class Meta:
         model = models.Events
-        fields = ['start_date','end_date','session_end','session_clinic','session_doctor','session_area','session_used_balls']     
+        fields = ['start','start_date','session_end','session_clinic','session_doctor','session_area','session_used_balls','session_branch','end']     
 
-
+        labels = {
+            'start_date': (''),
+            'session_end': (''),
+            'session_clinic': (''),
+            'session_doctor': (''),
+            'session_area': (''),
+            'session_used_balls': (''),
+            'session_branch': (''),
+            
+            
+            },

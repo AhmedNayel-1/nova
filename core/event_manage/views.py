@@ -1,4 +1,4 @@
-from django.shortcuts import render ,redirect
+from django.shortcuts import render ,redirect ,get_object_or_404
 
 
 from django.views import generic
@@ -8,6 +8,8 @@ from .forms  import EventForm ,ArriveForm , SessionDetail
 from django.views.generic import TemplateView, View, DeleteView
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
+from datetime import datetime ,date
+ 
 #Create your views here.
 
 def event(request):
@@ -174,17 +176,7 @@ def newevent(request):
 
 
 
-def sessionDetail(request,id):
-    events = models.Events.objects.get(event_id=id)
-    if request.method == 'POST':
-        form = forms.SessionDetail(request.POST, instance=events)
-        if form.is_valid():
-           form.save()
-           return redirect("manage-event")
-           
-    else:
-        form = forms.SessionDetail(instance=events)
-    return render(request, 'core/templates/sessionDetail.html',{'form':form})       
+       
 
 
 
@@ -202,11 +194,11 @@ class ArriveCreateView(generic.CreateView):
     form_class = ArriveForm
     success_url = "/"    
     
-class SessionCreateView(generic.CreateView):
-    template_name="event_manage/templates/session_form.html"
-    model = Events
-    form_class = SessionDetail
-    success_url = "/"
+# class SessionCreateView(generic.CreateView):
+#     template_name="event_manage/templates/session_form.html"
+#     model = Events
+#     form_class = SessionDetail
+#     success_url = "/"
 
 
 def EventCreateView(request):
@@ -230,6 +222,113 @@ def EventCreateView(request):
         print(request)
         return redirect ('/event')
     return render(request, 'event_manage/templates/event_form.html',{'person':person})
+
+
+
+# def reception_all_reserv(request):
+#     today = date.today()
+#     reserv_today  =Events.objects.filter(start_date__startswith=today,arrive=False)
+    
+#     print(today)
+#     context={
+#         'reserv_today':reserv_today,
+           
+#     }
+
+#     return render(request,'event_manage/templates/reseptions.html',context)
+
+def reception_all_reserv(request):
+    today = date.today()
+    reserv_today  =Events.objects.filter(start_date__startswith=today,arrive=False)
+    
+    print(reserv_today)
+    context={
+        'reserv_today':reserv_today,
+           
+    }
+
+    return render(request,'event_manage/templates/reseptions.html',context)
+
             
     
 
+def reception_reserv_arrive(request):
+    today = date.today()
+   
+    reserv_arrive =Events.objects.filter(start_date__startswith=today,arrive=True,start=False)
+    
+    
+    context={
+        
+        'reserv_arrive':reserv_arrive,
+            
+    }
+
+    return render(request,'event_manage/templates/reseptions_arrive.html',context)
+
+def reception_reserv_srart(request):
+    today = date.today()
+   
+    
+    reserv_start  =Events.objects.filter(start_date__startswith=today,start=True)
+    
+    context={
+        
+        'reserv_start':reserv_start,
+            
+    }
+
+    return render(request,'event_manage/templates/reseptions_start.html',context)
+
+
+
+def onofarrive(requset,id):
+    a = get_object_or_404(Events, event_id=id)
+    a.arrive = True
+    a.arrivetime = datetime.now()
+    a.save()
+    return redirect("event_manage:reception_reserv_arrive")     
+
+# def onofstart(requset,id):
+#     a = get_object_or_404(Events, event_id=id)
+#     a.start = True
+#     a.save()
+#     return redirect("event_manage:reception_reserv_srart")   
+
+
+
+
+
+
+def sessionDetail(request,id):
+    events = Events.objects.get(event_id=id)
+    if request.method == 'POST':
+        form = SessionDetail(request.POST, instance=events)
+        if form.is_valid():
+           newform = form.save(commit=False)
+           newform.start = True
+           newform.start_session = datetime.now()
+           newform.save()
+           return redirect("event_manage:reception_all_reserv")
+           
+    else:
+        form = SessionDetail(instance=events)
+    return render(request, 'event_manage/templates/session.html',{'form':form})
+
+
+
+
+def balls_entry(request,event_id):
+    if request.method=='POST':
+      a = get_object_or_404(Events, event_id=event_id)
+      a.session_used_balls = request.POST['used_balls']
+      
+      a.save()
+
+
+      
+
+    #   data= Events(event_id=event_id,session_used_balls=session_used_balls)
+    #   data.save
+
+      return redirect("event_manage:reception_all_reserv")

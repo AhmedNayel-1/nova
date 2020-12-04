@@ -7,7 +7,7 @@ from . import forms, models
 from .filter import PatientFilter
 from django.utils import timezone
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist , MultipleObjectsReturned
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.db.models import Q 
@@ -22,6 +22,8 @@ from itertools import zip_longest
 from calls.models import calls
 from calls.models import calls
 from event_manage.models import Events
+from event_manage.models import Events
+from datetime import datetime ,date
 def create_ref_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))
 
@@ -93,16 +95,16 @@ class RoomCreateView(generic.CreateView):
 
 
 
-class AddDodtonIN(generic.CreateView):
-    template_name="core/templates/doctorin.html"
-    model=models.DoctorIn
-    form_class=forms.AddDodtonIN
-    success_url= "/DoctorInCreate"    
+# class AddDodtonIN(generic.CreateView):
+#     template_name="core/templates/doctorin.html"
+#     model=models.DoctorIn
+#     form_class=forms.AddDodtonIN
+#     success_url= "/DoctorInCreate"    
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["objects"] = self.model.objects.all()
-        return context        
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["objects"] = self.model.objects.all()
+#         return context        
 
 
 
@@ -171,39 +173,60 @@ def PatientDetailView(requset,id):
 
 
 
-def index(request):
-    Patient=models.Patient
-    Reservation=models.Reservation
-    Packages=models.Packages
-    Device=models.Packages
+# def index(request):
+#     Patient=models.Patient
+#     Reservation=models.Reservation
+#     Packages=models.Packages
+#     Device=models.Packages
+#     today = date.today()
 
-    totalPatient=Patient.objects.filter(Active=True).count
-    totalReservation=Reservation.objects.all().count
-    totalPackages=Packages.objects.filter(Active=True).count
-    totalDevice=Device.objects.filter(Active=True).count
+#     totalPatient=Patient.objects.filter(Active=True).count()
+#     totalReservation=Reservation.objects.all().count
+#     totalPackages=Packages.objects.filter(Active=True).count
+#     totalDevice=Device.objects.filter(Active=True).count
 
-
-    context={
-           'totalPatient':totalPatient,
-           'totalReservation':totalReservation,
-           'totalPackages':totalPackages,
-           'totalDevice':totalDevice,
     
-    }
-    return render(request,'core/templates/index.html',context)
+#     reserv_today_count  =Events.objects.filter(start_date__startswith=today,arrive=False).count()
+#     reserv_arrive_count =Events.objects.filter(start_date__startswith=today,arrive=True,start=False).count()
+#     reserv_start_count  =Events.objects.filter(start_date__startswith=today,start=True).count()
+
+#     print(reserv_start_count)
+#     print(totalPatient)
+#     context={
+#            'totalPatient':totalPatient,
+#            'totalReservation':totalReservation,
+#            'totalPackages':totalPackages,
+#            'totalDevice':totalDevice,
+#            'reserv_today_count':reserv_today_count,
+#            'reserv_arrive_count':reserv_arrive_count,
+#            'reserv_start_count':reserv_start_count,
+           
+    
+#     }
+#     return render(request,'core/templates/index.html',context)
 
 
 
-# from django.http import HttpResponse
-# from novav1.models import Patient
-# def toggle(request):
-#     w = Patient.objects.get(id=request.POST['id'])
-#     w.Active = request.POST['Active'] == 'true'
-#     w.save()
-#     return HttpResponse('success')    
+# def navbar(request):
+    # today = date.today()
+    # reserv_today_count  =Events.objects.filter(start_date__startswith=today,arrive=False).count
+    # reserv_arrive_count =Events.objects.filter(start_date__startswith=today,arrive=True,start=False).count
+    # reserv_start_count  =Events.objects.filter(start_date__startswith=today,start=True).count
+    
+#     reserv_today  =Events.objects.filter(start_date__startswith=today,arrive=False)
+#     reserv_arrive =Events.objects.filter(start_date__startswith=today,arrive=True,start=False)
+#     reserv_start  =Events.objects.filter(start_date__startswith=today,start=True)
+#     context={
+#         'reserv_today_count':reserv_today_count,
+#         'reserv_arrive_count':reserv_today_count,
+#         'reserv_start_count':reserv_today_count,
+#         'reserv_today':reserv_today,
+#         'reserv_today':reserv_today,
+#         'reserv_today':reserv_today,
+#     }
 
 
-
+#     return render (request, "core/templates/includes/navigation.html", context)
 
 class AreaCreateView(generic.CreateView):
     template_name="core/templates/area_form.html"
@@ -441,7 +464,7 @@ def itemslist(request,pid):
     try:
             cat1     =   models.Item.objects.filter(category=1)
             cat2     =   models.Item.objects.filter(category=2)
-            order    =   models.OrderItem.objects.filter(ordered=False,Patient=pid)
+            order    =   models.OrderItem.objects.get(ordered=False,Patient=pid)
             #order    =   get_object_or_404(models.Order, ordered=False,Patient=pid)
             Patientdata  =   models.Patient.objects.get(id=pid)
                 
@@ -657,6 +680,7 @@ def itemslist2(request,pid):
             cat1     =   models.Item.objects.filter(category=1)
             cat2     =   models.Item.objects.filter(category=2)
             order    =   models.Order.objects.get(ordered=False,Patient=pid)
+            #order        =   get_object_or_404(models.Order, ordered=False,Patient=pid)
             cat_all     =   models.Item.objects.all()
             #editdata = models.Order.objects.get(Patient=pid) 
             Patientdata  =   models.Patient.objects.get(id=pid)
@@ -680,15 +704,16 @@ def itemslist2(request,pid):
                     }
                     print(orderitems)
                     return render(request,"core/templates/shop2.html",context)
-    except ObjectDoesNotExist:
+    except (ObjectDoesNotExist, MultipleObjectsReturned):
             cat1     =   models.Item.objects.filter(category=1)
             cat2     =   models.Item.objects.filter(category=2)
             #order    =   models.Order.objects.get(ordered=False,Patient=pid)
             Patientdata  =   models.Patient.objects.get(id=pid)
+            cat_all     =   models.Item.objects.all()
             context={
                 'cat1':cat1,
                 'cat2':cat2,
-                
+                 'cat_all':cat_all,
                 'Patientdata': Patientdata
 
             }
@@ -782,6 +807,7 @@ def payment(request, pid ):
            newform = form.save(commit=False)
            newform.ref_code = create_ref_code()
            newform.ordered = True
+           ordered_date =  datetime.now()
            newform.save()
            order_qs = models.OrderItem.objects.filter(Patient=pid, ordered=False) #models.OrderItem.objects.filter(Patient=pid, ordered=False)
            if order_qs.exists():
@@ -867,6 +893,7 @@ def just_payment(request):
             Patient = Patient,
             Cash = Cash,
             user = user,
+            ordered_date = datetime.now(),
             order_type= "4"
 
         )
@@ -891,6 +918,7 @@ def Refunds(request):
             Patient = Patient,
             Cash = Cash,
             user = user,
+            ordered_date = datetime.now(),
             order_type= "5"
 
         )

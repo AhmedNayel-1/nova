@@ -35,9 +35,9 @@ urlpatterns = [
     path("roomCreate", views.RoomCreateView.as_view(), name="room-create"),
     path("area", views.AreaCreateView.as_view(), name="area-create"),
     
-    path("Device", views.DeviceCreateView.as_view(), name="Device-create"), 
-    path("DoctorIn", views.DoctorInCreateView.as_view(), name="DoctorIn-create"), 
-    path("DoctorOut", views.DoctorOutCreateView.as_view(), name="DoctorOut-create"), 
+    # path("Device", views.DeviceCreateView.as_view(), name="Device-create"), 
+    # path("DoctorIn", views.DoctorInCreateView.as_view(), name="DoctorIn-create"), 
+    # path("DoctorOut", views.DoctorOutCreateView.as_view(), name="DoctorOut-create"), 
     path("area", views.AreaCreateView.as_view(), name="area-create"),
     
     path("Device", views.DeviceCreateView.as_view(), name="Device-create"), 
@@ -49,7 +49,7 @@ urlpatterns = [
     path("Branch", views.BranchCreateView.as_view(), name="branch-create"), 
 
 
-    path("adddoctor", views.AddDodtonIN.as_view(), name="add-doctor"),
+    # path("adddoctor", views.AddDodtonIN.as_view(), name="add-doctor"),
     path('PackagesCreate/<int:id>/', views.onofPatient, name='onof-Patient'),
     path('area/<int:id>/', views.onofArea, name='onof-area'),
     path('Branch/<int:id>/', views.onofBranch, name='onof-Branch'),
@@ -98,9 +98,10 @@ urlpatterns = [
 
     path('balls_transaction', views.balls_transaction, name='balls_transaction'),
     path('payments', views.just_payment, name='just_payment'),
-    path('refund', views.just_payment, name='refund'),
+    path('refund', views.Refunds, name='refund'),
 
 
     path('cashbalance/<int:pid>/', views.cashbalance, name='cashbalance'),
     path('ballsbalance/<int:pid>/', views.ballsbalance, name='ballsbalance'),
+    
 ]

@@ -367,7 +367,7 @@ class Order(models.Model):
     items        =     models.ManyToManyField(OrderItem, blank=True, null=True)
     start_date   =     models.DateTimeField(auto_now_add=True)
     order_type   =     models.IntegerField(choices=ORDER_TYPE,default=1,blank=True,null=True)
-    ordered_date =     models.DateTimeField(auto_now_add=True)
+    ordered_date =     models.DateTimeField()  #auto_now_add=True
     ordered      =     models.BooleanField(default=False)
     # received     =     models.BooleanField(default=False)
     # refund_requested = models.BooleanField(default=False)
@@ -375,7 +375,7 @@ class Order(models.Model):
 
     TotalPrice       = models.IntegerField(default=0)
     Discount         = models.IntegerField(default=0)
-    Net              = models.IntegerField(default=0)
+    Net              = models.IntegerField(default=0,blank=True,null=True)
     Cash             = models.IntegerField(default=0)
     Remmaining       = models.IntegerField(default=0)
 

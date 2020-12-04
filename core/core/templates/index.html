@@ -67,7 +67,7 @@
                 <p>Total Patient</p>
               </div>
               <div class="icon">
-                <i class="ion ion-bag"></i>
+                <i class="fas fa-procedures"></i>
               </div>
               <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -77,12 +77,12 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>{{totalReservation}}<sup style="font-size: 20px"></sup></h3>
+                <h3>{{reserv_today_count}}<sup style="font-size: 20px"></sup></h3>
 
-                <p>Total Reservation</p>
+                <p>Total Reservations</p>
               </div>
               <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+                <i class="fas fa-calendar-check"></i>
               </div>
               <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -92,12 +92,12 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>{{totalPackages}}</h3>
+                <h3>{{reserv_arrive_count}}</h3>
 
-                <p>Total Packages</p>
+                <p>Waiting List</p>
               </div>
               <div class="icon">
-                <i class="ion ion-person-add"></i>
+                <i class="far fa-pause-circle"></i>
               </div>
               <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -107,9 +107,72 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>{{totalDevice}}</h3>
+                <h3>{{reserv_start_count}}</h3> 
 
-                <p>Total Device</p>
+                <h3>Live Now</h3>
+              </div>
+              <div class="icon">
+                <i class="fas fa-person-booth"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{total_cash_today}}</h3>
+
+                <p>Cash Today</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-cash-register"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{total_cash_refund}}<sup style="font-size: 20px"></sup></h3>
+
+                <p>Refund Today</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-money-bill-alt"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{net_cah}}</h3>
+
+                <p>Net Cash </p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{reserv_start_count}}</h3> 
+
+                <h3>Live Now</h3>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -120,7 +183,6 @@
           <!-- ./col -->
         </div>
         <!-- /.row -->
-        
       </div><!-- /.container-fluid -->
        <!-- Application buttons -->
             <div class="card">
