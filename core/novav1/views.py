@@ -148,8 +148,8 @@ def PatientDetailView(requset,id):
     totalReservation = Reservation.objects.filter(Patient_id=id).count()
 
     Pyments          = order.objects.filter(Patient_id=id ,order_type=4)
-    #sales            = get_object_or_404(order, Patient_id=id ,order_type=1)
-    sales            = order.objects.filter(Patient_id=id ,order_type=1)
+    #sales            =  models.Order.objects.get(ordered=True,Patient=id)
+    sales            = models.OrderItem .objects.filter(Patient_id=id )
     Refunds          = order.objects.filter(Patient_id=id ,order_type=5)
     callshistory     = calls.objects.filter(Customer_id=id )
     balls_transaction= ballsestrans.objects.filter(Q(from_user=id) | Q(to_user=id) )
@@ -798,7 +798,7 @@ def edit(request, pid ):
 def payment(request, pid ):
     order = models.Order.objects.get(ordered=False,Patient=pid)
     ordertotals = models.Order.objects.filter(ordered=False,Patient=pid)
-    
+    #sales= models.OrderItem .objects.get(Patient_id=pid ,ordered=False)
     #editdata = models.Order.objects.get(Patient=pid)
     Patientdata  =   models.Patient.objects.get(id=pid) 
     if request.method == 'POST':
@@ -809,6 +809,8 @@ def payment(request, pid ):
            newform.ordered = True
            ordered_date =  datetime.now()
            newform.save()
+        #    sales.ordered = True
+        #    salse.save()
            order_qs = models.OrderItem.objects.filter(Patient=pid, ordered=False) #models.OrderItem.objects.filter(Patient=pid, ordered=False)
            if order_qs.exists():
                 order = order_qs[0]

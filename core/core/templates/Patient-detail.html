@@ -135,7 +135,7 @@
               </thead>
               <tbody>
               <tr>
-                {% for person in sales.items.all %}    
+                {% for person in sales %}    
                 <td>{{person.item.title}}</td>
                 <td>{{person.item.category.title}}</td>
                 <td>{{person.price}}</td>

@@ -3,7 +3,7 @@
 {% block title %} Dashboard {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini {% endblock body_class %} 
+{% block body_class %} sidebar-mini sidebar-collapse {% endblock body_class %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -191,11 +191,11 @@
               </div>
               <div class="card-body">
                 <p></p>
-                <a class="btn btn-app">
-                  <i class="fas fa-edit"></i> Edit
+                <a class="btn btn-app" href="{% url 'Patient-create' %}">
+                  <i class="fas fa-edit"></i> New
                 </a>
-                <a class="btn btn-app">
-                  <i class="fas fa-play"></i> Play
+                <a class="btn btn-app" href="{% url 'event_manage:Event-create' %}" >
+                  <i class="fas fa-play"></i> Reservations 
                 </a>
                 <a class="btn btn-app">
                   <i class="fas fa-pause"></i> Pause
@@ -203,9 +203,9 @@
                 <a class="btn btn-app">
                   <i class="fas fa-save"></i> Save
                 </a>
-                <a class="btn btn-app">
+                <a class="btn btn-app" href="{% url 'event_manage:reception_all_reserv' %}">
                   <span class="badge bg-warning">3</span>
-                  <i class="fas fa-bullhorn"></i> Notifications
+                  <i class="fas fa-bullhorn"></i> Reception 
                 </a>
                 <a class="btn btn-app">
                   <span class="badge bg-success">300</span>
@@ -219,13 +219,13 @@
                   <span class="badge bg-teal">67</span>
                   <i class="fas fa-inbox"></i> Orders
                 </a>
-                <a class="btn btn-app">
+                <a class="btn btn-app" href="{% url 'just_payment' %}">
                   <span class="badge bg-info">12</span>
-                  <i class="fas fa-envelope"></i> Inbox
+                  <i class="fas fa-money-check-alt"></i> Payment
                 </a>
-                <a class="btn btn-app">
+                <a class="btn btn-app"href="{% url 'balls_transaction' %}" >
                   <span class="badge bg-danger">531</span>
-                  <i class="fas fa-heart"></i> Likes
+                  <i class="fas fa-exchange-alt"></i> Balls Transaction
                 </a>
               </div>
               <!-- /.card-body -->
