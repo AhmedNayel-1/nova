@@ -4,7 +4,7 @@
 nk Page {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini pace-primary {% endblock body_class %}
+{% block body_class %}  sidebar-mini sidebar-collapse {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -28,12 +28,13 @@ nk Page {% endblock %}
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Balls Balance</h1>
+            <h1>Balls Balance  {{Patientdata.PatientName}} </h1>
+           <h3 class="info-box-number text-center text-muted mb-0">{{Patientdata.PatientMobile1}} </h3> 
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Start</li>
+              {% comment %} <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Start</li> {% endcomment %}
             </ol>
           </div>
         </div>

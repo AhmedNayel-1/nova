@@ -1,42 +1,75 @@
-from django.shortcuts import render ,redirect ,get_object_or_404
+from django.shortcuts import render ,redirect ,get_object_or_404 
 
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-from .models import Events , CrudUser
-from novav1.models import Patient
-from .forms  import EventForm ,ArriveForm , SessionDetail
+from .models import Events , CrudUser ,EventType ,deviceparameters ,Event
+from novav1.models import Patient ,DoctorIn , pricing ,Patient ,Branch,DoctorIn,pricing,Clinc
+from .forms  import EventForm ,ArriveForm , SessionDetail ,callsFormsEvents,ParametersForms
 from django.views.generic import TemplateView, View, DeleteView
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from datetime import datetime ,date
- 
+from datetime import datetime ,date ,timedelta
+from .filter import EventsFilter
+from django.db.models import Q 
+from django.db.models import Max ,F
+from itertools import zip_longest 
+
+
+
 #Create your views here.
+
+# def event(request):
+#     all_events = Events.objects.all()
+#     get_event_types = Events.objects.only('event_type')
+
+#     # if filters applied then get parameter and filter based on condition else return object
+#     # if request.GET:  
+#     #     event_arr = []
+#     #     if request.GET.get('event_type') == "all":#
+#     #         all_events = Events.objects.all()
+#     #     else:   
+#     #         all_events = Events.objects.filter(event_type__icontains=request.GET.get('event_type'))
+            
+#     #     for i in all_events:
+#     #         event_sub_arr = {}
+#     #         event_sub_arr['title'] = i.event_name
+#     #         start_date = datetime.datetime.strptime(str(i.start_date.date()), "%Y-%m-%d").strftime("%Y-%m-%d")
+#     #         end_date = datetime.datetime.strptime(str(i.end_date.date()), "%Y-%m-%d").strftime("%Y-%m-%d")
+#     #         event_sub_arr['start'] = start_date
+#     #         event_sub_arr['end'] = end_date
+#     #         event_arr.append(event_sub_arr)
+#     #     return HttpResponse(json.dumps(event_arr))
+
+#     context = {
+#         "events":all_events,
+#         #"get_event_types":get_event_types,
+
+#     }
+#     return render(request,'core/templates/calendar.html',context)
+
 
 def event(request):
     all_events = Events.objects.all()
     get_event_types = Events.objects.only('event_type')
-
-    # if filters applied then get parameter and filter based on condition else return object
-    # if request.GET:  
-    #     event_arr = []
-    #     if request.GET.get('event_type') == "all":#
-    #         all_events = Events.objects.all()
-    #     else:   
-    #         all_events = Events.objects.filter(event_type__icontains=request.GET.get('event_type'))
-            
-    #     for i in all_events:
-    #         event_sub_arr = {}
-    #         event_sub_arr['title'] = i.event_name
-    #         start_date = datetime.datetime.strptime(str(i.start_date.date()), "%Y-%m-%d").strftime("%Y-%m-%d")
-    #         end_date = datetime.datetime.strptime(str(i.end_date.date()), "%Y-%m-%d").strftime("%Y-%m-%d")
-    #         event_sub_arr['start'] = start_date
-    #         event_sub_arr['end'] = end_date
-    #         event_arr.append(event_sub_arr)
-    #     return HttpResponse(json.dumps(event_arr))
-
+    pe  = Patient.objects.all()
+    ev   = Events.objects.all()
+    Cl   = Clinc.objects.all()
+    Doc   = DoctorIn.objects.all()
+    Br  = Branch.objects.all()
+    pr   = pricing.objects.all()
+    today = datetime.now().date()
+    tomorrow = today + timedelta(1)
+    filter = EventsFilter(request.GET, queryset=Events.objects.all())
+    
     context = {
         "events":all_events,
-        #"get_event_types":get_event_types,
+        'pe':pe,
+        'Cl':Cl,
+        'Doc':Doc,
+        'Br':Br,
+        'pr':pr,
+        'filter':filter,
+
 
     }
     return render(request,'core/templates/calendar.html',context)
@@ -151,25 +184,46 @@ def add_event_to_end(request):
 #     def  get(self, request):
 def newevent(request):
     if request.method=='POST':
-        event_name = request.POST['event_name']
-        start_date = request.POST['start_date']
-        end_date = request.POST['end_date']
-
-        obj = Events.objects.create(
-            event_name = event_name,
-            start_date = start_date,
-            end_date = end_date,
+        event_name     = Patient.objects.get(pk=request.POST.get('Patient'))
+        start_date     = request.POST['start']
+        end_date       = request.POST['end']
+        session_clinic = Clinc.objects.get(pk=request.POST.get('clinic'))
+        event_doctor   = DoctorIn.objects.get(pk=request.POST.get('doctor'))
+        branch_event   = Branch.objects.get(pk=request.POST.get('branch'))
+        event_area     = request.POST['area']    #pricing.objects.get(pk=request.POST.get('area'))
+        user           = request.user
         
+
+        # obj = Events.objects.create(
+        #     event_name = event_name,
+        #     start_date = start_date,
+        #     end_date = end_date,
+        #     session_clinic=session_clinic,
+        #     event_doctor=event_doctor,
+        #     branch_event=branch_event,
+        #     #event_area=event_area
+        # )
+        obj = Events(
+        event_name = event_name,
+        start_date = start_date,
+        end_date = end_date,
+        session_clinic=session_clinic,
+        event_doctor=event_doctor,
+        branch_event=branch_event,
+        #event_area=event_area
+
         )
 
-        event = {'id':obj.event_id,'event_name':obj.event_name,'start_date':obj.start_date,'end_date':obj.end_date}
+        obj.save()
+        
 
-        data = {
-            'event': event
-        }
-        print(request.POST) 
-        #return JsonResponse(data)
-        #return HttpResponseRedirect('/newevent')
+        obj.event_area.add(event_area)
+        
+
+        # areas = pricing.objects.get(pk=int(request.POST['area']))
+        # for areas in areas:
+        #     obj.event_area.add(areas)
+
         return redirect ('/event')
     return redirect ('/event')
 
@@ -201,29 +255,93 @@ class ArriveCreateView(generic.CreateView):
 #     success_url = "/"
 
 
+# def EventCreateView(request):
+#     person  = Patient.objects.all()
+#     event   = Events.objects.all()
+#     Clincs   = Clinc.objects.all()
+#     DoctorIns   = DoctorIn.objects.all()
+#     Branchs   = Branch.objects.all()
+#     pricings   = pricing.objects.all()
+
+#     if request.method=='POST':
+#         event_name     = Patient.objects.get(pk=request.POST.get('Patient'))
+#         start_date     = request.POST['start_date']
+#         end_date       = request.POST['end_date']
+#         session_clinic = Clinc.objects.get(pk=request.POST.get('clinic'))
+#         event_doctor   = DoctorIn.objects.get(pk=request.POST.get('doctor'))
+#         branch_event   = Branch.objects.get(pk=request.POST.get('branch'))
+#         #event_area     = pricing.objects.get(pk=request.POST.get('area'))
+#         user           = request.user
+        
+#         print(request.POST)
+#         obj = Events.objects.create(
+#             event_name = event_name,
+#             start_date = start_date,
+#             end_date = end_date,
+#             session_clinic=session_clinic,
+#             event_doctor=event_doctor,
+#             branch_event=branch_event,
+#             #event_area=event_area
+
+#         )
+#         # obj = Events(
+#         #     event_name = event_name,
+#         #     start_date = start_date,
+#         #     end_date = end_date,
+#         #     session_clinic=session_clinic,
+#         #     event_doctor=event_doctor,
+#         #     branch_event=branch_event,
+#         #     #event_area=event_area
+
+#         # )
+#         # obj.save()
+#         #obj.event_area.add()
+#         # areas = pricing.objects.get(id=event_area)
+#         # for user in areas:
+#         #     obj.event_area.add(areas)
+
+#         # context = {
+#         #         'person':person,
+#         #         'Clincs':Clincs,
+#         #         'DoctorIns':DoctorIns,
+#         #         'Branchs':Branchs,
+#         #         'pricings':pricings,
+
+#         # }
+
+#         print(request)
+#         return redirect ('/event')
+#     return render(request, 'event_manage/templates/event_form.html', {
+#                 'person':person,
+#                 'Clincs':Clincs,
+#                 'DoctorIns':DoctorIns,
+#                 'Branchs':Branchs,
+#                 'pricings':pricings,
+
+#         })
+
 def EventCreateView(request):
     person  = Patient.objects.all()
     event   = Events.objects.all()
 
     if request.method=='POST':
-        event_name  = Patient.objects.get(pk=request.POST.get('Patient'))
-        start_date  = request.POST['start_date']
-        end_date    = request.POST['end_date']
-        user = request.user
-
+        #event_name  = Patient.objects.get(pk=int(request.POST['Patient']))
+        event_name  = Patient.objects.get(id=int(request.POST.get('Patient')))
+        # start_date  = request.POST['start_date']
+        # end_date    = request.POST['end_date']
+        # #user = request.user
+        
         obj = Events.objects.create(
             event_name = event_name,
-            start_date = start_date,
+            #start_date = start_date,
            # end_date = end_date,
             
 
         )
 
-        print(request)
+        print(start_date)
         return redirect ('/event')
-    return render(request, 'event_manage/templates/event_form.html',{'person':person})
-
-
+    return render(request, 'event_manage/templates/event_form_git_test.html',{'person':person})
 
 # def reception_all_reserv(request):
 #     today = date.today()
@@ -270,8 +388,8 @@ def reception_reserv_srart(request):
     today = date.today()
    
     
-    reserv_start  =Events.objects.filter(start_date__startswith=today,start=True)
-    
+    reserv_start  =Events.objects.filter(arrivetime__startswith=today,start=True)
+    print(reserv_start)
     context={
         
         'reserv_start':reserv_start,
@@ -302,6 +420,12 @@ def onofarrive(requset,id):
 
 def sessionDetail(request,id):
     events = Events.objects.get(event_id=id)
+    event_name=events.event_name
+    eventsparts= events.event_area
+    targetid= id -1
+    #eventsprametars=deviceparameters.objects.filter(Patient_name=event_name,event_id=targetid).order_by('-event_id')                    
+    #eventsprametars=deviceparameters.objects.order_by('Patient_name__PatientName', '-Date').distinct('Patient_name__PatientName')
+    #eventsprametars=deviceparameters.objects.annotate(max_date=Max('part_id__deviceparameters__Date')).filter(Date=F('max_date'),Patient_name=event_name,part_id=eventsparts)
     if request.method == 'POST':
         form = SessionDetail(request.POST, instance=events)
         if form.is_valid():
@@ -309,11 +433,11 @@ def sessionDetail(request,id):
            newform.start = True
            newform.start_session = datetime.now()
            newform.save()
-           return redirect("event_manage:reception_all_reserv")
+           return redirect("event_manage:reception_reserv_srart")
            
     else:
         form = SessionDetail(instance=events)
-    return render(request, 'event_manage/templates/session.html',{'form':form})
+    return render(request, 'event_manage/templates/session.html',{'form':form,'events':events})
 
 
 
@@ -322,7 +446,8 @@ def balls_entry(request,event_id):
     if request.method=='POST':
       a = get_object_or_404(Events, event_id=event_id)
       a.session_used_balls = request.POST['used_balls']
-      
+      a.session_end =datetime.now()
+      a.end =True
       a.save()
 
 
@@ -332,3 +457,289 @@ def balls_entry(request,event_id):
     #   data.save
 
       return redirect("event_manage:reception_all_reserv")
+
+
+
+def filter(request): 
+    today = datetime.now().date()
+    tomorrow = today + timedelta(1)
+    filter = EventsFilter(request.GET, queryset=Events.objects.filter(start_date__startswith=tomorrow))
+    events= Events.objects.all()
+   
+    print(today)
+    context={
+               'events':events,
+               'filter': filter,
+               'tomorrow':tomorrow
+    }
+    return render(request, 'table.html', context)      
+
+
+
+def eventfilter(request):
+    #Patients= models.Patient.objects.all
+    DoctorIns   = DoctorIn.objects.all()
+    events_type   = EventType.objects.all()
+    today = datetime.now().date()
+    tomorrow = today + timedelta(1)
+
+    if request.method == 'GET':
+            start_date   = tomorrow #request.GET.get('start', None)
+            end_date     = request.GET.get('end', None)
+            event_type   = request.GET.get('doctor', None)
+            event_doctor = request.GET.get('events', None)
+            submitbutton= request.GET.get('submit', None)
+
+            #if request is not None:
+            lookups= Q(start_date__icontains=start_date) | Q(end_date__icontains=end_date)|  Q(event_doctor__icontains=event_type)|Q(event_doctor__icontains=event_doctor)
+                            
+                            
+                            
+
+            results= Events.objects.filter(lookups).distinct()
+
+            context={'results': results,
+                    'submitbutton': submitbutton,
+                    'Patients':Patients
+                    }
+
+            return render(request, 'core/templates/search.html', context)
+
+            # else:
+            #      return render(request, 'core/templates/search.html',{'Patients':Patients,'events_type':events_type,'DoctorIns':DoctorIns})
+
+    else:
+        return render(request, 'core/templates/search.html',{'Patients':Patients,'events_type':events_type,'DoctorIns':DoctorIns}) 
+
+
+def make_call_for_events(request,id):
+    event_get_data = Events.objects.get(event_id=id)
+    eventdata      =Events.objects.filter(event_id=id)
+    if request.POST:
+        form = callsFormsEvents(request.POST, instance=event_get_data)
+        if form.is_valid():
+              newform = form.save(commit=False)
+              newform.event_id = id
+              newform.user= request.user
+              if newform.save():
+                return redirect('event_manage:eventfilter')
+              else:
+               return redirect('event_manage:eventfilter')
+        else:
+        
+            return redirect('event_manage:eventfilter')
+
+        return redirect('event_manage:eventfilter')
+    else:
+        form = callsFormsEvents()
+        print(eventdata)
+        return render(request, 'event_manage/templates/event_call.html', {'form':form,'eventdata':eventdata})
+
+
+
+def dvice_prametars(request,id):
+
+    eventsprametars=parameters.objects.filter(event_id=id)#.order_by('-id')[0] 
+
+    context={
+
+        'eventsprametars':eventsprametars
+    }   
+    print(eventsprametars)
+    return render(request, 'event_manage/templates/receipt.html', context)
+
+
+
+
+def paramentry(request,id):
+    # events = Events.objects.get(event_id=id)
+    # event_name=events.event_name
+
+    # eventsprametars=deviceparameters.objects.annotate(max_date=Max('part_id__deviceparameters__Date')).filter(Date=F('max_date'),Patient_name=event_name)
+    if request.method=='POST':
+        Patient_name     = Patient.objects.get(pk=request.POST.get('Patient'))
+        part        = pricing.objects.get(pk=request.POST.get('area'))
+        
+        CandelaAlex = request.POST['CandelaAlex']
+        DekaAlex    = request.POST['DekaAlex']
+        DekaMoveo   = request.POST['DekaMoveo']
+        Joule       = request.POST['Joule']
+        msec        = request.POST['msec']
+        PulseCount  = request.POST['PulseCount']
+        OperatorName=DoctorIn.objects.get(pk=request.POST.get('doctor'))
+        user           = request.user
+        
+
+        obj = deviceparameters.objects.create(
+            Patient_name = Patient_name,
+            part = part,
+            CandelaAlex = CandelaAlex,
+            DekaAlex=DekaAlex,
+            Joule=Joule,
+            msec=msec,
+            PulseCount=PulseCount,
+            OperatorName=OperatorName,
+            user=user,
+
+        )
+        
+        print(request)
+        return redirect ('/')
+    return render(request, 'event_manage/templates/prametars_entry.html', {'eventsprametars':eventsprametars,})
+
+
+
+def prametersreport(request,id):
+    events = Events.objects.get(event_id=id)
+    event_name=events.event_name
+    eventsarea=Events.objects.filter(event_id=id)
+    eventsprametars=deviceparameters.objects.annotate(max_date=Max('part_id__deviceparameters__Date')).filter(Date=F('max_date'),Patient_name=event_name)
+    if request.method=='POST':
+        Patient_name     = Patient.objects.get(pk=request.POST.get('Patient'))
+        part        = pricing.objects.get(pk=request.POST.get('area'))
+        
+        CandelaAlex = request.POST['CandelaAlex']
+        DekaAlex    = request.POST['DekaAlex']
+        DekaMoveo   = request.POST['DekaMoveo']
+        Joule       = request.POST['Joule']
+        msec        = request.POST['msec']
+        PulseCount  = request.POST['PulseCount']
+        OperatorName=DoctorIn.objects.get(pk=request.POST.get('doctor'))
+        user           = request.user
+        
+
+        obj = deviceparameters.objects.create(
+            Patient_name = Patient_name,
+            part = part,
+            CandelaAlex = CandelaAlex,
+            DekaAlex=DekaAlex,
+            Joule=Joule,
+            msec=msec,
+            PulseCount=PulseCount,
+            OperatorName=OperatorName,
+            user=user,
+
+
+        )
+    context={
+        'events':events,
+        'eventsprametars':eventsprametars,
+        'eventsarea':eventsarea
+
+    }
+
+
+    return render(request, 'event_manage/templates/prametars_entry.html', context)
+
+
+
+def EventCreateView_new(request):
+    pe  = Patient.objects.all()
+    ev   = Events.objects.all()
+    Cl   = Clinc.objects.all()
+    Doc   = DoctorIn.objects.all()
+    Br  = Branch.objects.all()
+    pr   = pricing.objects.all()
+
+    if request.method=='POST':
+        event_name     = Patient.objects.get(pk=request.POST.get('Patient'))
+        start_date     = request.POST['start_date']
+        end_date       = request.POST['end_date']
+        session_clinic = Clinc.objects.get(pk=request.POST.get('clinic'))
+        event_doctor   = DoctorIn.objects.get(pk=request.POST.get('doctor'))
+        branch_event   = Branch.objects.get(pk=request.POST.get('branch'))
+        event_area     = pricing.objects.get(pk=request.POST.get('area'))
+        user           = request.user
+        
+
+        obj = Events.objects.create(
+            event_name = event_name,
+            start_date = start_date,
+            end_date = end_date,
+            session_clinic=session_clinic,
+            event_doctor=event_doctor,
+            branch_event=branch_event,
+            #event_area=event_area
+
+        )
+        obj.event_area.add(event_area)
+        # obj = Events(
+        #     event_name = event_name,
+        #     start_date = start_date,
+        #     end_date = end_date,
+        #     session_clinic=session_clinic,
+        #     event_doctor=event_doctor,
+        #     branch_event=branch_event,
+        #     #event_area=event_area
+
+        # )
+        # obj.save()
+        #obj.event_area.add()
+        # areas = pricing.objects.get(id=event_area)
+        # for user in areas:
+        #     obj.event_area.add(areas)
+
+        # context = {
+        #         'person':person,
+        #         'Clincs':Clincs,
+        #         'DoctorIns':DoctorIns,
+        #         'Branchs':Branchs,
+        #         'pricings':pricings,
+
+        # }
+
+        print(request)
+        return redirect ('/event')
+    return render(request, 'event_manage/templates/event_form_new.html', {
+                'pe':pe,
+                'Cl':Cl,
+                'Doc':Doc,
+                'Br':Br,
+                'pr':pr,
+
+        })
+
+def calendertest(request):
+    context={}
+    return render(request, 'event_manage/templates/caltest.html',context )        
+
+
+
+
+
+def allInOneView(request,part_id,id):
+
+    Pat_deviceparameters=deviceparameters.objects.filter(part_id=part_id,Patient_name_id=id)
+    parts=pricing.objects.all()
+    objects_list = list(zip_longest(Pat_deviceparameters, parts))
+    Patients= Patient.objects.get(pk=id)
+    par =  pricing.objects.raw('select * from novav1_pricing '
+                                          'left join (select * from event_manage_deviceparameters where  Patient_name_id=%s) '
+                                          ,[id])
+    try:
+        session = deviceparameters.objects.get(part_id=part_id,Patient_name_id=id)
+    except ObjectDoesNotExist:
+        session = None
+
+    print(par)
+    """
+    A subclass of ModelForm can accept an existing model instance 
+    as the keyword argument instance; 
+    if this is supplied, save() will update that instance. 
+    If it's not supplied, save() will create a new instance of the specified model.
+    """
+    
+    form = ParametersForms(instance=session)
+    
+    if request.method == 'POST':
+        form = ParametersForms(request.POST, instance=session)
+        if form.is_valid():
+             newform = form.save(commit=False)
+             newform.Patient_name = Patient.objects.get(pk=id)
+             newform.Date = datetime.now()     
+             newform.part = pricing.objects.get(pk=part_id)
+             newform.save()
+            
+        return HttpResponseRedirect(request.path)
+
+    return render(request  ,'event_manage/templates/editor.html', {'form': form,'Pat_deviceparameters':Pat_deviceparameters,'parts':parts,'objects_list':objects_list,'par':par,'Patients':Patients})

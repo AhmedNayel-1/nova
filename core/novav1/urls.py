@@ -103,5 +103,7 @@ urlpatterns = [
 
     path('cashbalance/<int:pid>/', views.cashbalance, name='cashbalance'),
     path('ballsbalance/<int:pid>/', views.ballsbalance, name='ballsbalance'),
+
+    path('reserv', views.reserv, name='reserv'),# for test
     
 ]

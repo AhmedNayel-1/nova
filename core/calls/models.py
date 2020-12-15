@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 import time
 import math
 import datetime
-
+from django.conf import settings
 LABEL_CHOICES = (
     
     (1, '1 day'),
@@ -32,7 +32,7 @@ class statue(models.Model):
 
 class calls(models.Model):
     Customer     = models.ForeignKey("novav1.Patient", on_delete=models.CASCADE)
-    user         = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    user         = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,blank=True,null=True)
     Note         = models.TextField(max_length=100)
     Statue       = models.ForeignKey("statue", on_delete=models.CASCADE)
     Calldate     = models.DateField(default=datetime.datetime.now,blank=True,null=True)

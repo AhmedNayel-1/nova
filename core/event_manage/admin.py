@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Events ,CrudUser
+from .models import Events ,CrudUser ,EventType ,deviceparameters,Event
 from import_export.admin import ImportExportModelAdmin 
 
 
@@ -11,4 +11,6 @@ from import_export.admin import ImportExportModelAdmin
 #      pass
 
 admin.site.register(Events)
-admin.site.register(CrudUser)
+admin.site.register(EventType)
+admin.site.register(deviceparameters)
+admin.site.register(Event)

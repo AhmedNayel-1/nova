@@ -3,7 +3,7 @@
 {% block title %} Forms Advanced {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini {% endblock body_class %}
+{% block body_class %}  sidebar-mini sidebar-collapse {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -48,12 +48,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Advanced Form</h1>
+                   <h3 class="info-box-text text-center text-muted"> {{Patientdata.PatientName}}</h4>
+                    <h3 class="info-box-number text-center text-muted mb-0">{{Patientdata.PatientMobile1}}</h4>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Advanced Form</li>
+              {% comment %} <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Advanced Form</li> {% endcomment %}
             </ol>
           </div>
         </div>
@@ -91,7 +92,7 @@
               <tbody>
               <tr>
                 {% for person in Pyments %}
-                <td>{{person.Patient}}</td>
+                <td>{{person.user}}</td>
                 <td>{{person.Cash}}</td>
                 <td>{{person.ordered_date}}</td>
                 
@@ -126,9 +127,9 @@
             <table id="example3" class="table table-bordered table-striped">
               <thead>
               <tr>
-                <th>Rendering engine</th>
-                <th>Browser</th>
-                <th>Platform(s)</th>
+                <th>Items Name</th>
+                <th>category</th>
+                <th>price</th>
                 
                 
               </tr>
@@ -152,7 +153,7 @@
         </div>
         <div class="card card-default">
           <div class="card-header">
-            <h3 class="card-title">balls_transaction</h3>
+            <h3 class="card-title">Balls Transaction</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -194,7 +195,7 @@
         </div>
         <div class="card card-default">
           <div class="card-header">
-            <h3 class="card-title">callshistory</h3>
+            <h3 class="card-title">Calls History</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -430,7 +431,7 @@
       $('#example3').DataTable({
         "paging": true,
         "lengthChange": false,
-        "searching": false,
+        "searching": true,
         "ordering": true,
         "info": true,
         "autoWidth": false,

@@ -40,7 +40,7 @@ class ArriveForm(forms.ModelForm):
 class SessionDetail(forms.ModelForm):  
     class Meta:
         model = models.Events
-        fields = ['start','start_date','session_end','session_clinic','session_doctor','session_area','session_used_balls','session_branch','end']     
+        fields = ['start','start_date','session_end','session_clinic','session_doctor','session_area','session_used_balls','session_branch','end','session_area']     
 
         labels = {
             'start_date': (''),
@@ -53,3 +53,29 @@ class SessionDetail(forms.ModelForm):
             
             
             },
+
+
+
+class callsFormsEvents(forms.ModelForm):  
+    class Meta:
+        model =  models.Events
+        fields = ['event_type','event_note']    
+
+        labels = {
+            'event_name': (''),
+            'start_date': (''),
+            'end_date': (''),
+            'event_type': (''),
+            'event_note': (''),
+            
+            
+            
+            }
+
+
+class ParametersForms(forms.ModelForm):  
+    class Meta:
+        model =  models.deviceparameters
+        fields =['Joule','msec','PulseCount','OperatorName']    
+
+                 

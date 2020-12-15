@@ -76,26 +76,35 @@
                     <td>{{obj.event_name}}</td>
                     <td>{{obj.start_session|time}}</td>
                     <td>{{obj.session_end|time}}</td>
-                      {% if obj.start == True %}
+                      {% if obj.start == True and obj.end == False  %}
                             <td class="p-3 mb-2 bg-success text-white" >Live Now </span></td>
+                            {%elif obj.start == True and obj.end == True %}
+                            <td class="p-3 mb-2 bg-danger text-white">End </td>
                             {% endif %}
                             {% if obj.end == True %}
                             <td class="p-3 mb-2 bg-danger text-white">End </td>
+                            {%else%}
+                            <td class="p-3 mb-2 bg-success text-white" >Live Now </span></td>
                             {% endif %}
-                            <td><a class="btn btn-warning" href="{% url 'event_manage:onofarrive'  obj.event_id %}">Change</a> </td>
+                            <!-- <td><a class="btn btn-warning" href="{% url 'event_manage:onofarrive'  obj.event_id %}">Change</a> </td> -->
+                            {% if obj.end == True %}
+                            <td class="p-3 mb-2 bg-danger text-white">Done : used{{obj.session_used_balls}} balls  </td>
+                              
+                              {%else%}
+                              <td>
+                                <form class="form-inline" action="{% url 'event_manage:balls_entry'  obj.event_id %}" method="post">
+                                  {% csrf_token %}
+                                  <div class="form-group mx-sm-3 mb-2">
+                                    <label for="inputPassword2" class="sr-only">Password</label>
+                                    <input type="text" class="form-control" id="used_balls"  name="used_balls" placeholder="used balls">
+                                  </div>
+                                  <button type="submit" class="btn btn-primary mb-2">Confirm </button>
+                                </form>
+                              {% endif %}
+                            </td>
                             <td>
-                              <form class="form-inline" action="{% url 'event_manage:balls_entry'  obj.event_id %}" method="post">
-                                {% csrf_token %}
-                                <div class="form-group mx-sm-3 mb-2">
-                                  <label for="inputPassword2" class="sr-only">Password</label>
-                                  <input type="text" class="form-control" id="used_balls"  name="used_balls" placeholder="used balls">
-                                </div>
-                                <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
-                              </form>
-
-
-                              </td>
-                            
+                              <a href="{% url 'event_manage:prametersreport' obj.event_id %}" class="btn btn-outline-primary">parameters</a>
+                            </td>
                         </tr>
                    
                       {% comment %} {% if obj.Active == True %} 

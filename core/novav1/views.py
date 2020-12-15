@@ -140,7 +140,7 @@ def PatientDetailView(requset,id):
     Reservation= models.Reservation
     order      = models.Order
     ballsestrans    = models.Transaction
-    
+    Patientdata  =   models.Patient.objects.get(id=id)
     
 
     PatientDetail    =Patients.objects.filter(id=id)
@@ -148,8 +148,9 @@ def PatientDetailView(requset,id):
     totalReservation = Reservation.objects.filter(Patient_id=id).count()
 
     Pyments          = order.objects.filter(Patient_id=id ,order_type=4)
-    #sales            =  models.Order.objects.get(ordered=True,Patient=id)
+    #sales            = get_object_or_404(order, Patient_id=id ,order_type=1)
     sales            = models.OrderItem .objects.filter(Patient_id=id )
+    # sales            = order.objects.filter(Patient_id=id ,order_type=1)
     Refunds          = order.objects.filter(Patient_id=id ,order_type=5)
     callshistory     = calls.objects.filter(Customer_id=id )
     balls_transaction= ballsestrans.objects.filter(Q(from_user=id) | Q(to_user=id) )
@@ -161,6 +162,7 @@ def PatientDetailView(requset,id):
         'totalReservation':totalReservation,
         'ReservationDetail':ReservationDetail,
         'Pyments':Pyments,
+        'Patientdata':Patientdata,
         'sales':sales,
         'Refunds':Refunds,
         'callshistory':callshistory,
@@ -798,7 +800,7 @@ def edit(request, pid ):
 def payment(request, pid ):
     order = models.Order.objects.get(ordered=False,Patient=pid)
     ordertotals = models.Order.objects.filter(ordered=False,Patient=pid)
-    #sales= models.OrderItem .objects.get(Patient_id=pid ,ordered=False)
+    
     #editdata = models.Order.objects.get(Patient=pid)
     Patientdata  =   models.Patient.objects.get(id=pid) 
     if request.method == 'POST':
@@ -809,8 +811,6 @@ def payment(request, pid ):
            newform.ordered = True
            ordered_date =  datetime.now()
            newform.save()
-        #    sales.ordered = True
-        #    salse.save()
            order_qs = models.OrderItem.objects.filter(Patient=pid, ordered=False) #models.OrderItem.objects.filter(Patient=pid, ordered=False)
            if order_qs.exists():
                 order = order_qs[0]
@@ -865,6 +865,7 @@ def balls_transaction(request):
             Patient = to_user,
             balls = amount,
             order_type= "2",
+            ordered_date= datetime.now(),
             user = user
         )
         objtodelet = models.Order.objects.create(
@@ -872,6 +873,7 @@ def balls_transaction(request):
             Patient_from = to_user,
             balls = amount,
             order_type= "3",
+            ordered_date= datetime.now(),
             user = user
         )
 
@@ -890,6 +892,8 @@ def just_payment(request):
         #Cash = models.Patient.objects.get(pk=int(request.POST.get('cash')))
         Cash = request.POST['Cash']
         user = request.user
+        pid  =   request.POST['Patient']
+
 
         obj = models.Order.objects.create(
             Patient = Patient,
@@ -901,7 +905,7 @@ def just_payment(request):
         )
 
         
-        return redirect ('/')
+        return redirect ('cashbalance',pid=pid)
     return render(request, 'core/templates/payments.html',{'person':person ,'orders':orders}) 
 
 
@@ -934,7 +938,8 @@ def Refunds(request):
 
 def cashbalance(request ,pid):
     cash=models.Order.objects.filter( Patient_id=pid)   #order_type__in=[1, 4]
-
+    Patientdata  =   models.Patient.objects.get(id=pid)
+   
     total_price=0
     for value in cash:
         total_price += value.TotalPrice
@@ -942,13 +947,16 @@ def cashbalance(request ,pid):
     total_cash=0
     for value in cash:
         total_cash += value.Cash 
+
     total_Remmaining=0
     for value in cash:
-        total_Remmaining += value.Remmaining
-    Total_required = total_price - total_cash
+        total_Remmaining += value.Discount
+    Total_required = total_price - total_cash-total_Remmaining
 
 
     context={
+           'Patientdata':Patientdata,
+           'total_price':total_price,
            'cash':cash,
            'total_cash':total_cash,
            'total_Remmaining':total_Remmaining,
@@ -960,7 +968,8 @@ def cashbalance(request ,pid):
 
 def ballsbalance(request ,pid):
     order_all_ballses= models.Order.objects.filter( order_type__in=[1, 2,3],Patient_id=pid) 
-
+    Patientdata  =   models.Patient.objects.get(id=pid)
+  
     #Add balls efects models
     order_transfer_ballses = models.Order.objects.filter( order_type__in=[1, 2],Patient_id=pid) 
 
@@ -977,7 +986,7 @@ def ballsbalance(request ,pid):
 
     total_ballse_in_event=0
     for value in event:
-        total_ballse_in_event += value.session_used_balls
+        total_ballse_in_event +=    int(value.session_used_balls)
 
     order_transfer_ballses=0
     for value in range(order_transfer_ballses):
@@ -996,6 +1005,7 @@ def ballsbalance(request ,pid):
 
     
     context={
+           'Patientdata':Patientdata,
            'objects_list':objects_list,
            'total_plus_balls_in_order':total_plus_balls_in_order,
            'total_cut_ballses':total_cut_ballses,
@@ -1006,3 +1016,23 @@ def ballsbalance(request ,pid):
     return render(request, 'core/templates/ballsbalance.html', context)
 
 
+
+
+def reserv(request):
+    person  = models.Patient.objects.all()
+    
+
+    if request.method=='POST':
+        Patient = models.Patient.objects.get(pk=int(request.POST.get('Patient')))
+        
+        
+        pid  =   request.POST['Patient']
+
+
+        obj = Events.objects.create(
+            event_name = Patient
+        )
+
+        
+        return redirect ("/")
+    return render(request, 'core/templates/eventsreserv.html',{'person':person}) 

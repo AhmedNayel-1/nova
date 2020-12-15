@@ -4,7 +4,7 @@
 nk Page {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini sidebar-collapse {% endblock body_class %}
+{% block body_class %}  sidebar-mini sidebar-collapse {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -28,12 +28,13 @@ nk Page {% endblock %}
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Cash Balance</h1>
+            <h1>Cash Balance  {{Patientdata.PatientName}}</h1>
+            {% comment %} <h3 class="info-box-number text-center text-muted mb-0">{{Patientdata.PatientMobile1}} </h3>  {% endcomment %}
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Start</li>
+              {% comment %} <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Start</li> {% endcomment %}
             </ol>
           </div>
         </div>
@@ -53,7 +54,7 @@ nk Page {% endblock %}
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-thumbs-up"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">total_cash</span>
+                <span class="info-box-text">Total Cash</span>
                 <span class="info-box-number">
                   {{total_cash}}
                   
@@ -69,7 +70,7 @@ nk Page {% endblock %}
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-down"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">total Remmaining</span>
+                <span class="info-box-text">Total Discount</span>
                 <span class="info-box-number">{{total_Remmaining}}</span>
               </div>
               <!-- /.info-box-content -->
@@ -128,7 +129,7 @@ nk Page {% endblock %}
           <table id="example3" class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th>Name</th>
+              <th>Date</th>
               <th>Type</th>
               <th>TotalPrice</th>
               <th>Cash</th>
@@ -139,8 +140,14 @@ nk Page {% endblock %}
             <tbody>
             <tr>
               {% for person in cash %}    
-              <td>{{person.}}</td>
-              <td>{{person.order_type}}</td>
+              
+              <td>{{person.start_date}} </td>
+              {%if person.order_type == 1 %}
+              <td>sale</td>
+              {%else%}
+              <td>payment</td>
+              {% endif %}
+
               <td>{{person.TotalPrice}}</td>
               <td>{{person.Cash}}</td>
               <td>{{person.Remmaining}}</td>
@@ -148,9 +155,9 @@ nk Page {% endblock %}
             </tr>
             {%endfor%}
             <td colspan="2" class="border-bottom-0">Tolals</td>
-            <td></td>
+            <td>{{total_price}}</td>
             <td>{{total_cash}}</td>
-            <td>{{total_Remmaining}}</td>
+            <td></td>
             مطلوب :{{Total_required}}
             </tfoot>
           </table>

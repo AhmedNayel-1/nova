@@ -25,7 +25,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Regestrations Form</h1>
+            <h1>Regestrations Form</h1> {{events.event_name}}
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -70,6 +70,7 @@
                     
                     {{ form.session_branch|as_crispy_field }}
                   </div>
+                 
                 </div>
                 <!-- <div class="form-group">
                   <label for="inputAddress2">Address 2</label>
@@ -125,7 +126,44 @@
             </div></div></div>
             <!-- /.card -->
             <!-- Default box -->
-     
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                       <thead>
+                       <tr>
+                         <th>Area Name</th>              
+                         <th>Date</th>
+                         <th>CandelaAlex</th>
+                         <th>DekaAlex</th>              
+                         <th>DekaMoveo</th>
+                         <th>Joule</th>
+                         <th>msec</th>              
+                         <th>PulseCount</th>
+                         <th>OperatorName</th>
+                       </tr>
+                       </thead>
+                       <tbody>
+                       {% for obj in eventsprametars %}
+                       <tr>
+                         <td>{{obj.part}}</td>
+                         <td>{{obj.Date}}</td>
+                         <td>{{obj.CandelaAlex}}</td>
+                         <td>{{obj.DekaAlex}}</td>
+                         <td>{{obj.DekaMoveo}}</td>
+                         <td>{{obj.Joule}}</td>
+                         <td>{{obj.msec}}</td>
+                         <td>{{obj.PulseCount}}</td>
+                         <td>{{obj.OperatorName}}</td>
+                         <td>{{obj.event_id}}</td>    
+                         <td>{{obj.Patient_name_id}}</td>  part
+                         <td>{{obj.part_id}}</td>
+                           
+                        
+                         
+                       {% endfor %} 
+                      
+                       </tfoot>
+                     </table>
+             </div>
         <!-- /.card-body -->
 {% endblock content %}
 

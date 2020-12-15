@@ -4,7 +4,7 @@
 nk Page {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini pace-primary {% endblock body_class %}
+{% block body_class %}  sidebar-mini sidebar-collapse {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -139,7 +139,7 @@ nk Page {% endblock %}
                                   <td>
                                    <div>
                                         <a class="btn btn-warning" href="{% url 'Patient-detail' result.id %}" target="_blank">Detail</a> 
-                                        <a class="btn btn-warning" href="{% url 'items-list' result.id %}" target="_blank">pos</a>
+                                        {% comment %} <a class="btn btn-warning" href="{% url 'items-list' result.id %}" target="_blank">pos</a> {% endcomment %}
                                         <a class="btn btn-warning" href="{% url 'items-list2' result.id %}" target="_blank">sale</a> 
                                         <a class="btn btn-warning" href="{% url 'cashbalance' result.id %}" target="_blank">cash </a> 
                                         <a class="btn btn-warning" href="{% url 'ballsbalance' result.id %}" target="_blank">balls</a> 

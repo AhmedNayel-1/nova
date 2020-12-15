@@ -40,11 +40,11 @@ class Area(models.Model):
     def __str__ (self):
         return  str(self.AreaName)
 
-class Clinc(models.Model):
-    ClincName = models.CharField(db_column='Text_Clinc', max_length=150, blank=True, null=True)  # Field name made lowercase.
+# class Clinc(models.Model):
+#     ClincName = models.CharField(db_column='Text_Clinc', max_length=150, blank=True, null=True)  # Field name made lowercase.
 
-    def __str__ (self):
-        return  str(self.ClincName)
+#     def __str__ (self):
+#         return  str(self.ClincName)
 
 
 class Comefrom(models.Model):
@@ -174,12 +174,19 @@ class pricing(models.Model):
     BodyPart=models.CharField( max_length=50)
     price=models.IntegerField(default=0)
     BallsNumber=models.IntegerField(default=0)
-    
+    time_of_part=models.IntegerField(default=0)
     def __str__(self):
         return self.BodyPart
 
     def partprice(self):
         return self.price
+
+    def parts_time(self):
+        t_time=0
+        for i in pricing:
+            t_time =+ time_of_part
+        return  t_time  
+
 
 class Packages(models.Model):
     PackageName=models.CharField(max_length=50)      

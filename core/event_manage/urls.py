@@ -5,6 +5,7 @@ from django.urls import  path
 from django.conf.urls import url
 from . import views
 app_name = 'event_manage'
+
 urlpatterns = [                          
    path('event/', views.event, name="manage-event"),
    url('^calendareve', views.calendar, name='calendar'),
@@ -23,6 +24,7 @@ urlpatterns = [
     path('eventreservation/<int:id>', views.update, name='eventreservation'),
 
     path("eventcreate", views.EventCreateView, name="Event-create"), 
+    path("eventcreatenew", views.EventCreateView_new, name="Event-create_new"), 
     path("arrive", views.ArriveCreateView.as_view(), name="Arrive-create"), 
     path("session/<int:id>", views.sessionDetail, name="Session-create"), 
     
@@ -34,5 +36,24 @@ urlpatterns = [
 
     path("onofarrive/<int:id>/", views.onofarrive, name="onofarrive"), 
     path("onofstart/<int:id>/", views.onofarrive, name="onofstart"), 
+
+    
+    path('eventtype/<int:id>/', views.make_call_for_events, name='make_call_for_events'),               
+    
+
+    path('eventfilter/',views.filter,name="eventfilter"),        
+
+    path('calendertest/',views.calendertest,name="calendertest"), 
+
+     
+
+    path('prametars/<int:id>/',views.dvice_prametars,name="prametars"),
+    path("prametarsentry/<int:id>/", views.paramentry, name="prametars_entry"),
+
+
+    path("prametersreport/<int:id>/", views.prametersreport, name="prametersreport"),
+
+    path("eventparameters/<int:part_id>/<int:id>/", views.allInOneView, name="allInOneView"),
+
 
 ]

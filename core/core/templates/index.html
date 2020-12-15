@@ -3,7 +3,7 @@
 {% block title %} Dashboard {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini sidebar-collapse {% endblock body_class %} 
+{% block body_class %}  sidebar-mini sidebar-collapse{% endblock body_class %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -107,9 +107,11 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>{{reserv_start_count}}</h3> 
+
+                   <h3>{{reserv_start_count}}</h3> 
 
                 <h3>Live Now</h3>
+            
               </div>
               <div class="icon">
                 <i class="fas fa-person-booth"></i>
@@ -170,9 +172,9 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>{{reserv_start_count}}</h3> 
+                  <h3>{{todatcalls}}</h3> 
 
-                <h3>Live Now</h3>
+                <h3>Call Count</h3>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -185,7 +187,7 @@
         <!-- /.row -->
       </div><!-- /.container-fluid -->
        <!-- Application buttons -->
-            <div class="card">
+           <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Application Elements</h3>
               </div>
@@ -204,28 +206,33 @@
                   <i class="fas fa-save"></i> Save
                 </a>
                 <a class="btn btn-app" href="{% url 'event_manage:reception_all_reserv' %}">
-                  <span class="badge bg-warning">3</span>
+                  <span class="badge bg-warning"></span>
                   <i class="fas fa-bullhorn"></i> Reception 
                 </a>
                 <a class="btn btn-app">
-                  <span class="badge bg-success">300</span>
+                  <span class="badge bg-success"></span>
                   <i class="fas fa-barcode"></i> Products
                 </a>
                 <a class="btn btn-app">
-                  <span class="badge bg-purple">891</span>
+                  <span class="badge bg-purple"></span>
                   <i class="fas fa-users"></i> Users
                 </a>
-                <a class="btn btn-app">
-                  <span class="badge bg-teal">67</span>
-                  <i class="fas fa-inbox"></i> Orders
-                </a>
+                
                 <a class="btn btn-app" href="{% url 'just_payment' %}">
-                  <span class="badge bg-info">12</span>
+                  <span class="badge bg-info"></span>
                   <i class="fas fa-money-check-alt"></i> Payment
                 </a>
+                <a class="btn btn-app" href="{% url 'event_manage:eventfilter' %}">
+                  <span class="badge bg-info"></span>
+                  <i class="fa fa-phone"></i> Confirmtions
+                </a>
                 <a class="btn btn-app"href="{% url 'balls_transaction' %}" >
-                  <span class="badge bg-danger">531</span>
+                  <span class="badge bg-danger"></span>
                   <i class="fas fa-exchange-alt"></i> Balls Transaction
+                </a>
+                <a class="btn btn-app"href="{% url 'event_manage:manage-event' %}" >
+                  <span class="badge bg-danger"></span>
+                  <i class="fas fa-calendar-alt"></i> calendar
                 </a>
               </div>
               <!-- /.card-body -->

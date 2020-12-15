@@ -3,7 +3,7 @@
 {% block title %} Gallery {% endblock %} 
 
 <!-- Element injected in the BODY element -->
-{% block body_class %}sidebar-mini sidebar-collapse {% endblock body_class %} 
+{% block body_class %} sidebar-mini sidebar-collapse {% endblock body_class %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -280,11 +280,13 @@
             </div>
           </div>
         </div>
+      </div>
+      </div>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
     
-  </div>
+  {% comment %} </div>
   <!-- /.content-wrapper -->
   <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
@@ -306,10 +308,9 @@
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-  </div>
+  </div> {% endcomment %}
 
 
-</div></div></div></div>
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->

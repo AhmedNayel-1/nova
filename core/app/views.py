@@ -54,7 +54,7 @@ def index(request):
     reserv_arrive_count =Events.objects.filter(start_date__startswith=today,arrive=True,start=False).count()
     reserv_start_count  =Events.objects.filter(start_date__startswith=today,start=True).count()
 
-    orders_p= Order.objects.filter(ordered_date__startswith=today, order_type__in=[1,2])
+    orders_p= Order.objects.filter(ordered_date__startswith=today, order_type__in=[1,2,4])
     orders_m= Order.objects.filter(ordered_date__startswith=today, order_type=5)
     total_cash_today = 0
     for cash in orders_p:
@@ -84,7 +84,7 @@ def index(request):
            'total_cash_today':total_cash_today,
            'total_cash_refund':total_cash_refund,
            'net_cah':net_cah,
-    
+           'todatcalls':todatcalls,
 
     
     }

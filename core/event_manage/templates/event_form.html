@@ -39,12 +39,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Advanced Form</h1>
+            <h1>Reservation Form</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Cash Payments</li>
+              <li class="breadcrumb-item active">Reservation</li>
             </ol>
           </div>
         </div>
@@ -75,16 +75,33 @@
                 {% csrf_token %}
                 <form>
                   <div class="container">
-                      <div class="col-md-8">
+                    <div class="row">
+                      <div class='col-md-5'>
+                        <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
                         <select name="Patient" class="form-control select2" >
-                            {% for item in person%}
-                            <option value={{item.pk}}>{{item.PatientName}}</option>
-                            {%endfor%}
-                          </select>
-                        </div>
+                          {% for item in person%}
+                          <option value={{item.pk}}>{{item.PatientName}}</option>
+                          {%endfor%}
+                        </select>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                      </div>
+                    </div> 
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                      <select name="doctor" class="form-control select2" >
+                          {% for item in DoctorIns%}
+                          <option value={{item.pk}}>{{item.DocName}}</option>
+                          {%endfor%}
+                        </select>
+                      </div>
+                      
+                    </div>
                         <br>
                             <div class='col-md-5'>
                                 <div class="form-group">
+                                  <label for="exampleInputEmail1">From:</label>
                                    <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
                                         <input type="text" name="start_date" class="form-control datetimepicker-input" data-target="#datetimepicker7"/>
                                         <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
@@ -95,6 +112,7 @@
                             </div>
                             <div class='col-md-5'>
                                 <div class="form-group">
+                                  <label for="exampleInputEmail1">To:</label>
                                    <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
                                         <input type="text"  name="end_date"class="form-control datetimepicker-input" data-target="#datetimepicker8"/>
                                         <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
@@ -103,14 +121,70 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="container">
+                              <div class="row">
+                                <div class='col-md-5'>
+                                  <div class="form-group">
+                                  <label for="exampleInputEmail1">Branchs</label>
+                                  <select name="branch" class="form-control select2" >
+                                    {% for item in Branchs%}
+                                    <option value={{item.pk}}>{{item.BranchName}}</option>
+                                    {%endfor%}
+                                  </select>
+                                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                              </div> 
+                              <div class="col-md-5">
+                                <div class="form-group">
+                                  <label for="exampleInputEmail1">Clinc</label>
+                                <select name="clinic" class="form-control select2"   >
+                                    {% for item in Clincs%}
+                                    <option value={{item.pk}}>{{item.ClincName}}</option>
+                                    {%endfor%}
+                                  </select>
+                                </div>
+                                
+                              </div>
+                              
+                            </div> 
+                            <div class="container">
+                              <!-- <div class="row">
+                                <div class='col-md-10'>
+                                  <div class="form-group">
+                                  <label for="exampleInputEmail1">Branchs</label>
+                                  <select name="branch" class="form-control select2" >
+                                    {% for item in Branchs%}
+                                    <option value={{item.pk}}>{{item.BranchName}}</option>
+                                    {%endfor%}
+                                  </select>
+                                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                              </div> -->
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="form-group">
+                                  <label>Multiple</label>
+                                  <select name="area" class="duallistbox" multiple="multiple">
+                                    {% for item in pricings%}
+                                    <option value={{item.pk}}>{{item.BodyPart}}</option>
+                                    {%endfor%}
+                                    
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                              </div>
+                              <!-- /.col -->
+                            </div> 
+                                
                         </div>
-
+                      
                     <div>
                         <br>
-                    <button type="submit" class="btn btn-primary">Pay</button>
+                    <button type="submit" class="btn btn-primary">Reserv</button>
                      </div>
                   </form>
             </div>
+          </div>
             <!-- /.row -->
 
            
@@ -120,7 +194,7 @@
         <!-- /.card -->
 
         
-        <button type="submit">save</button>
+        {% comment %} <button type="submit">save</button> {% endcomment %}
           </div>
         </div>
         <!-- /.card -->
