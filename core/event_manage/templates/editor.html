@@ -46,7 +46,7 @@
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Quick Example</h3>
+                <h3 class="card-title">{{parametername.BodyPart}}</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -112,25 +112,7 @@
                  
                   </tfoot>
                 </table>
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>Doctor In Name</th>
-                    <th>statu</th>
-                    
-                    
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for obj in parts %}
-                  <tr>
-                    <td>{{obj.BodyPart}}</td>
-                    <td><a class="btn btn-warning" href="{% url 'event_manage:allInOneView'  obj.id  Patients.id  %}">Change</a> </td>
-                  </tr>
-                  {% endfor %} 
-                 
-                  </tfoot>
-                </table>
+               
                 </div></div>
         <!-- /.card-body -->
 {% endblock content %}

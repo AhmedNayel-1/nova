@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from django.forms.utils import ErrorList
 from django.http import HttpResponse
 from .forms import LoginForm, SignUpForm
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 def login_view(request):
     form = LoginForm(request.POST or None)

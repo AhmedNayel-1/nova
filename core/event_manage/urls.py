@@ -24,7 +24,7 @@ urlpatterns = [
     path('eventreservation/<int:id>', views.update, name='eventreservation'),
 
     path("eventcreate", views.EventCreateView, name="Event-create"), 
-    path("eventcreatenew", views.EventCreateView_new, name="Event-create_new"), 
+    path("eventcreatenew", views.EventCreateView_new, name="Event-create-new"), 
     path("arrive", views.ArriveCreateView.as_view(), name="Arrive-create"), 
     path("session/<int:id>", views.sessionDetail, name="Session-create"), 
     

@@ -67,6 +67,7 @@
                     <th>To</th>             
                     <th>statu</th>
                     <th>Change statu</th>
+                    <th>parametars</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -82,16 +83,10 @@
                             <td class="p-3 mb-2 bg-danger text-white">Inactive </td>
                             {% endif %}
                             <td><a class="btn btn-warning" href="{% url 'event_manage:Session-create'  obj.event_id %}">Start</a> </td>
-                            
+                            <td><a class="btn btn-warning" href="{% url 'event_manage:allInOneView' part_id=1  id=obj.event_name_id  %}" target="_blank">parametars</a> </td>
                         </tr>
                    
-                      {% comment %} {% if obj.Active == True %} 
-                    <td class="bg-gradient-green">Active</td>
-                    {% else %}
-                    <td>Inactive</td>>
-                    {% endif %}
-
-                  </tr>{% endcomment %}
+                       
                   {% endfor %} 
                  
                   </tfoot>

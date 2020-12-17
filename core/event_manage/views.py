@@ -1,9 +1,9 @@
 from django.shortcuts import render ,redirect ,get_object_or_404 
-
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from .models import Events , CrudUser ,EventType ,deviceparameters ,Event
-from novav1.models import Patient ,DoctorIn , pricing ,Patient ,Branch,DoctorIn,pricing,Clinc
+from novav1.models import Patient ,DoctorIn , pricing ,Patient ,Branch,DoctorIn,pricing,Clinc,Category
 from .forms  import EventForm ,ArriveForm , SessionDetail ,callsFormsEvents,ParametersForms
 from django.views.generic import TemplateView, View, DeleteView
 from django.http import HttpResponseRedirect
@@ -13,6 +13,7 @@ from .filter import EventsFilter
 from django.db.models import Q 
 from django.db.models import Max ,F
 from itertools import zip_longest 
+from .utils import send_whatsapp_messages , send_sms_messages ,send_sms_messages_auto
 
 
 
@@ -248,112 +249,43 @@ class ArriveCreateView(generic.CreateView):
     form_class = ArriveForm
     success_url = "/"    
     
-# class SessionCreateView(generic.CreateView):
-#     template_name="event_manage/templates/session_form.html"
-#     model = Events
-#     form_class = SessionDetail
-#     success_url = "/"
 
 
-# def EventCreateView(request):
-#     person  = Patient.objects.all()
-#     event   = Events.objects.all()
-#     Clincs   = Clinc.objects.all()
-#     DoctorIns   = DoctorIn.objects.all()
-#     Branchs   = Branch.objects.all()
-#     pricings   = pricing.objects.all()
 
-#     if request.method=='POST':
-#         event_name     = Patient.objects.get(pk=request.POST.get('Patient'))
-#         start_date     = request.POST['start_date']
-#         end_date       = request.POST['end_date']
-#         session_clinic = Clinc.objects.get(pk=request.POST.get('clinic'))
-#         event_doctor   = DoctorIn.objects.get(pk=request.POST.get('doctor'))
-#         branch_event   = Branch.objects.get(pk=request.POST.get('branch'))
-#         #event_area     = pricing.objects.get(pk=request.POST.get('area'))
-#         user           = request.user
-        
-#         print(request.POST)
-#         obj = Events.objects.create(
-#             event_name = event_name,
-#             start_date = start_date,
-#             end_date = end_date,
-#             session_clinic=session_clinic,
-#             event_doctor=event_doctor,
-#             branch_event=branch_event,
-#             #event_area=event_area
-
-#         )
-#         # obj = Events(
-#         #     event_name = event_name,
-#         #     start_date = start_date,
-#         #     end_date = end_date,
-#         #     session_clinic=session_clinic,
-#         #     event_doctor=event_doctor,
-#         #     branch_event=branch_event,
-#         #     #event_area=event_area
-
-#         # )
-#         # obj.save()
-#         #obj.event_area.add()
-#         # areas = pricing.objects.get(id=event_area)
-#         # for user in areas:
-#         #     obj.event_area.add(areas)
-
-#         # context = {
-#         #         'person':person,
-#         #         'Clincs':Clincs,
-#         #         'DoctorIns':DoctorIns,
-#         #         'Branchs':Branchs,
-#         #         'pricings':pricings,
-
-#         # }
-
-#         print(request)
-#         return redirect ('/event')
-#     return render(request, 'event_manage/templates/event_form.html', {
-#                 'person':person,
-#                 'Clincs':Clincs,
-#                 'DoctorIns':DoctorIns,
-#                 'Branchs':Branchs,
-#                 'pricings':pricings,
-
-#         })
 
 def EventCreateView(request):
     person  = Patient.objects.all()
     event   = Events.objects.all()
 
     if request.method=='POST':
-        #event_name  = Patient.objects.get(pk=int(request.POST['Patient']))
+        Patients  = Patient.objects.get(pk=int(request.POST['Patient']))
+        to= Patients.PatientMobile1
+        pname= Patients.PatientName
+        
         event_name  = Patient.objects.get(id=int(request.POST.get('Patient')))
-        # start_date  = request.POST['start_date']
-        # end_date    = request.POST['end_date']
+        start_date  = request.POST['start_date']
+        end_date    = request.POST['end_date']
         # #user = request.user
         
         obj = Events.objects.create(
             event_name = event_name,
-            #start_date = start_date,
-           # end_date = end_date,
+            start_date = start_date,
+            end_date = end_date,
             
 
         )
+
+        # body = "لقد تم الحجز يوم Nova center " + str(start_date) + str(pname) + " باسم"+ " "
+        body = f' نوفاسنتر{start_date}بتاريح {pname} تم الحجز باسم '
+        #send_whatsapp_messages(body,to)
+        send_sms_messages(to)
+        send_sms_messages_auto(body,to)
 
         print(start_date)
         return redirect ('/event')
     return render(request, 'event_manage/templates/event_form_git_test.html',{'person':person})
 
-# def reception_all_reserv(request):
-#     today = date.today()
-#     reserv_today  =Events.objects.filter(start_date__startswith=today,arrive=False)
-    
-#     print(today)
-#     context={
-#         'reserv_today':reserv_today,
-           
-#     }
 
-#     return render(request,'event_manage/templates/reseptions.html',context)
 
 def reception_all_reserv(request):
     today = date.today()
@@ -423,6 +355,7 @@ def sessionDetail(request,id):
     event_name=events.event_name
     eventsparts= events.event_area
     targetid= id -1
+    eventsprametars=deviceparameters.objects.filter(Patient_name=event_name)
     #eventsprametars=deviceparameters.objects.filter(Patient_name=event_name,event_id=targetid).order_by('-event_id')                    
     #eventsprametars=deviceparameters.objects.order_by('Patient_name__PatientName', '-Date').distinct('Patient_name__PatientName')
     #eventsprametars=deviceparameters.objects.annotate(max_date=Max('part_id__deviceparameters__Date')).filter(Date=F('max_date'),Patient_name=event_name,part_id=eventsparts)
@@ -437,7 +370,7 @@ def sessionDetail(request,id):
            
     else:
         form = SessionDetail(instance=events)
-    return render(request, 'event_manage/templates/session.html',{'form':form,'events':events})
+    return render(request, 'event_manage/templates/session.html',{'form':form,'events':events,'eventsprametars':eventsprametars})
 
 
 
@@ -538,8 +471,8 @@ def make_call_for_events(request,id):
 
 
 def dvice_prametars(request,id):
-
-    eventsprametars=parameters.objects.filter(event_id=id)#.order_by('-id')[0] 
+    eventsprametars=deviceparameters.objects.filter(Patient_name=id)
+    #eventsprametars=parameters.objects.filter(event_id=id)#.order_by('-id')[0] 
 
     context={
 
@@ -640,6 +573,7 @@ def EventCreateView_new(request):
     Doc   = DoctorIn.objects.all()
     Br  = Branch.objects.all()
     pr   = pricing.objects.all()
+    cat   = Category.objects.all()
 
     if request.method=='POST':
         event_name     = Patient.objects.get(pk=request.POST.get('Patient'))
@@ -649,6 +583,7 @@ def EventCreateView_new(request):
         event_doctor   = DoctorIn.objects.get(pk=request.POST.get('doctor'))
         branch_event   = Branch.objects.get(pk=request.POST.get('branch'))
         event_area     = pricing.objects.get(pk=request.POST.get('area'))
+        category       = Category.objects.get(pk=request.POST.get('cat'))
         user           = request.user
         
 
@@ -659,6 +594,7 @@ def EventCreateView_new(request):
             session_clinic=session_clinic,
             event_doctor=event_doctor,
             branch_event=branch_event,
+            event_service=category
             #event_area=event_area
 
         )
@@ -696,6 +632,7 @@ def EventCreateView_new(request):
                 'Doc':Doc,
                 'Br':Br,
                 'pr':pr,
+                'cat':cat
 
         })
 
@@ -709,10 +646,17 @@ def calendertest(request):
 
 def allInOneView(request,part_id,id):
 
+    part_id = part_id
     Pat_deviceparameters=deviceparameters.objects.filter(part_id=part_id,Patient_name_id=id)
     parts=pricing.objects.all()
     objects_list = list(zip_longest(Pat_deviceparameters, parts))
     Patients= Patient.objects.get(pk=id)
+    
+    try:
+        parametername= get_object_or_404 (pricing ,pk=part_id)
+    except ObjectDoesNotExist:
+        messages.info(request, "Item was added to your cart.")
+    
     par =  pricing.objects.raw('select * from novav1_pricing '
                                           'left join (select * from event_manage_deviceparameters where  Patient_name_id=%s) '
                                           ,[id])
@@ -721,7 +665,7 @@ def allInOneView(request,part_id,id):
     except ObjectDoesNotExist:
         session = None
 
-    print(par)
+    
     """
     A subclass of ModelForm can accept an existing model instance 
     as the keyword argument instance; 
@@ -730,16 +674,18 @@ def allInOneView(request,part_id,id):
     """
     
     form = ParametersForms(instance=session)
-    
-    if request.method == 'POST':
-        form = ParametersForms(request.POST, instance=session)
-        if form.is_valid():
-             newform = form.save(commit=False)
-             newform.Patient_name = Patient.objects.get(pk=id)
-             newform.Date = datetime.now()     
-             newform.part = pricing.objects.get(pk=part_id)
-             newform.save()
-            
-        return HttpResponseRedirect(request.path)
+    if part_id != 0 :
+        if request.method == 'POST':
+            form = ParametersForms(request.POST, instance=session)
+            if form.is_valid():
+                newform = form.save(commit=False)
+                newform.Patient_name = Patient.objects.get(pk=id)
+                newform.Date = datetime.now()     
+                newform.part = pricing.objects.get(pk=part_id)
+                newform.save()
+                
+            return HttpResponseRedirect(request.path)
+    else:
+        messages.info(request, "Item was added to your cart.")
 
-    return render(request  ,'event_manage/templates/editor.html', {'form': form,'Pat_deviceparameters':Pat_deviceparameters,'parts':parts,'objects_list':objects_list,'par':par,'Patients':Patients})
+    return render(request  ,'event_manage/templates/editor.html', {'form': form,'Pat_deviceparameters':Pat_deviceparameters,'parts':parts,'objects_list':objects_list,'par':par,'Patients':Patients,'parametername':parametername})

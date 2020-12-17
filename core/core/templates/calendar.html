@@ -95,7 +95,7 @@
                         <div class="filter-group">
                           <!-- <label>Status</label> -->
                           {{ filter.form.branch_event |as_crispy_field }}
-                      </div>event_clinic
+                      </div>
                       <div class="filter-group">
                         <!-- <label>Status</label> -->
                         {{ filter.form.event_service |as_crispy_field }}
@@ -104,7 +104,10 @@
                       <!-- <label>Status</label> -->
                       {{ filter.form.event_clinic |as_crispy_field }}
                   </div>
+                  <br>
+                  <div>
                       <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+                  </div>    
                     </form>
                     
                   </div>
@@ -533,9 +536,15 @@
         selectable: true,
         selectHelper: true,
         
-        select: function(start, end) {
-          jQuery('#createEventModal #apptStartTime').val(moment(start).format('DD/MM/YYYY HH:mm:ss'));
-          jQuery('#createEventModal #apptEndTime').val(moment(end).format('DD/MM/YYYY HH:mm:ss'));
+        select: function(start, end ,allDay) {
+          starttime = moment(start).format("Y-MM-DD HH:mm:ss");
+          endtime =  moment(end).format("Y-MM-DD HH:mm:ss");
+          var mywhen = starttime + ' - ' + endtime;
+          jQuery('#createEventModal #apptStartTime').val(starttime);
+          jQuery('#createEventModal #apptEndTime').val(endtime);
+          jQuery('#createEventModal #apptAllDay').val(allDay);
+          jQuery('#createEventModal #when').text(mywhen);
+          jQuery.noConflict();
           jQuery('#createEventModal').modal('show'); 
           
         },                                      
@@ -680,13 +689,13 @@
       });
       $('#datetimepicker8').datetimepicker({
         format: 'Y-MM-DD HH:mm:ss'
-      });
-      $("#datetimepicker7").on("change.datetimepicker", function (e) {
-          $('#datetimepicker8').datetimepicker('minDate', e.date);
-      });
-      $("#datetimepicker8").on("change.datetimepicker", function (e) {
-          $('#datetimepicker7').datetimepicker('maxDate', e.date);
-      });
+      // });
+      // $("#datetimepicker7").on("change.datetimepicker", function (e) {
+      //     $('#datetimepicker8').datetimepicker('minDate', e.date);
+      // });
+      // $("#datetimepicker8").on("change.datetimepicker", function (e) {
+      //     $('#datetimepicker7').datetimepicker('maxDate', e.date);
+      // });
   });
 </script>
 

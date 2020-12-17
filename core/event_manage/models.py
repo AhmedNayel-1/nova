@@ -23,7 +23,7 @@ class   deviceparameters(models.Model):
     OperatorName = models.ForeignKey("novav1.DoctorIn",related_name="Operator_Name" , on_delete=models.CASCADE)
     
     def __str__(self):
-        return str(self.event)
+        return str(self.Patient_name)
 
 
 

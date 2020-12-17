@@ -193,10 +193,10 @@
               </div>
               <div class="card-body">
                 <p></p>
-                <a class="btn btn-app" href="{% url 'Patient-create' %}">
+                <a class="btn btn-app" href="{% url 'Patient-create' %}" target="_blank">
                   <i class="fas fa-edit"></i> New
                 </a>
-                <a class="btn btn-app" href="{% url 'event_manage:Event-create' %}" >
+                <a class="btn btn-app" href="{% url 'event_manage:Event-create-new' %}"target="_blank" >
                   <i class="fas fa-play"></i> Reservations 
                 </a>
                 <a class="btn btn-app">
@@ -205,7 +205,7 @@
                 <a class="btn btn-app">
                   <i class="fas fa-save"></i> Save
                 </a>
-                <a class="btn btn-app" href="{% url 'event_manage:reception_all_reserv' %}">
+                <a class="btn btn-app" href="{% url 'event_manage:reception_all_reserv' %}" target="_blank">
                   <span class="badge bg-warning"></span>
                   <i class="fas fa-bullhorn"></i> Reception 
                 </a>
@@ -218,19 +218,19 @@
                   <i class="fas fa-users"></i> Users
                 </a>
                 
-                <a class="btn btn-app" href="{% url 'just_payment' %}">
+                <a class="btn btn-app" href="{% url 'just_payment' %}" target="_blank">
                   <span class="badge bg-info"></span>
                   <i class="fas fa-money-check-alt"></i> Payment
                 </a>
-                <a class="btn btn-app" href="{% url 'event_manage:eventfilter' %}">
+                <a class="btn btn-app"href="{% url 'event_manage:eventfilter' %}" target="_blank">
                   <span class="badge bg-info"></span>
                   <i class="fa fa-phone"></i> Confirmtions
                 </a>
-                <a class="btn btn-app"href="{% url 'balls_transaction' %}" >
+                <a class="btn btn-app"href="{% url 'balls_transaction' %}" target="_blank">
                   <span class="badge bg-danger"></span>
                   <i class="fas fa-exchange-alt"></i> Balls Transaction
                 </a>
-                <a class="btn btn-app"href="{% url 'event_manage:manage-event' %}" >
+                <a class="btn btn-app"href="{% url 'event_manage:manage-event' %}" target="_blank" >
                   <span class="badge bg-danger"></span>
                   <i class="fas fa-calendar-alt"></i> calendar
                 </a>

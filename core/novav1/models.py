@@ -122,7 +122,7 @@ class Patient(models.Model):
     JopArea = models.ForeignKey(Area, models.DO_NOTHING, db_column='JopArea', blank=True, null=True, related_name='JopArea')  # Field name made lowercase.
     PlaceJop = models.CharField(db_column='Place_Jop', max_length=150, blank=True, null=True)  # Field name made lowercase.
     Area = models.ForeignKey(Area, models.DO_NOTHING, db_column='Area', blank=True, null=True, related_name='Area')  # Field name made lowercase.
-    PatientMobile1= models.IntegerField(blank=True, null=True)
+    PatientMobile1= models.CharField(blank=True, null=True, max_length=50)
     PatientMobile2= models.IntegerField(blank=True, null=True)
     #CreatedDate =models.DateField(auto_now_add=True, blank=True, null=True)
  #   PatientPackages= models.ManyToManyField("Packages", related_name="PPackages" )

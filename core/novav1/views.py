@@ -175,60 +175,6 @@ def PatientDetailView(requset,id):
 
 
 
-# def index(request):
-#     Patient=models.Patient
-#     Reservation=models.Reservation
-#     Packages=models.Packages
-#     Device=models.Packages
-#     today = date.today()
-
-#     totalPatient=Patient.objects.filter(Active=True).count()
-#     totalReservation=Reservation.objects.all().count
-#     totalPackages=Packages.objects.filter(Active=True).count
-#     totalDevice=Device.objects.filter(Active=True).count
-
-    
-#     reserv_today_count  =Events.objects.filter(start_date__startswith=today,arrive=False).count()
-#     reserv_arrive_count =Events.objects.filter(start_date__startswith=today,arrive=True,start=False).count()
-#     reserv_start_count  =Events.objects.filter(start_date__startswith=today,start=True).count()
-
-#     print(reserv_start_count)
-#     print(totalPatient)
-#     context={
-#            'totalPatient':totalPatient,
-#            'totalReservation':totalReservation,
-#            'totalPackages':totalPackages,
-#            'totalDevice':totalDevice,
-#            'reserv_today_count':reserv_today_count,
-#            'reserv_arrive_count':reserv_arrive_count,
-#            'reserv_start_count':reserv_start_count,
-           
-    
-#     }
-#     return render(request,'core/templates/index.html',context)
-
-
-
-# def navbar(request):
-    # today = date.today()
-    # reserv_today_count  =Events.objects.filter(start_date__startswith=today,arrive=False).count
-    # reserv_arrive_count =Events.objects.filter(start_date__startswith=today,arrive=True,start=False).count
-    # reserv_start_count  =Events.objects.filter(start_date__startswith=today,start=True).count
-    
-#     reserv_today  =Events.objects.filter(start_date__startswith=today,arrive=False)
-#     reserv_arrive =Events.objects.filter(start_date__startswith=today,arrive=True,start=False)
-#     reserv_start  =Events.objects.filter(start_date__startswith=today,start=True)
-#     context={
-#         'reserv_today_count':reserv_today_count,
-#         'reserv_arrive_count':reserv_today_count,
-#         'reserv_start_count':reserv_today_count,
-#         'reserv_today':reserv_today,
-#         'reserv_today':reserv_today,
-#         'reserv_today':reserv_today,
-#     }
-
-
-#     return render (request, "core/templates/includes/navigation.html", context)
 
 class AreaCreateView(generic.CreateView):
     template_name="core/templates/area_form.html"
@@ -715,7 +661,7 @@ def itemslist2(request,pid):
             context={
                 'cat1':cat1,
                 'cat2':cat2,
-                 'cat_all':cat_all,
+                'cat_all':cat_all,
                 'Patientdata': Patientdata
 
             }
@@ -723,27 +669,6 @@ def itemslist2(request,pid):
             messages.error(request, "You do not have an active order")
             return render(request,"core/templates/shop2.html",context) 
 
-#  def itemslist2(request,pid):
-#     def get(self):
-#         try:
-#             cat1     =   models.Item.objects.filter(category=1)
-#             cat2     =   models.Item.objects.filter(category=2)
-#             order    =   models.Order.objects.filter(ordered=False,Patient=pid)
-            
-#             Patientdata  =   models.Patient.objects.get(id=pid)
-#             orderitems=  models.Order.items
-#             context={
-#                 'cat1':cat1,
-#                 'cat2':cat2,
-#                 'object': order,
-#                 'Patientdata': Patientdata
-
-#             }
-#             print(orderitems)
-#             return render(request,"core/templates/shop2.html",context)
-#         except ObjectDoesNotExist:
-#             messages.error(self.request, "You do not have an active order")
-#             return redirect("/")
 
 
     
